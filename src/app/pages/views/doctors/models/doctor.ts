@@ -1,11 +1,15 @@
+import { Department } from "../../departments/model/department";
+
 export class Doctor {
-    name: any
-    specialization: any
-    departments: any
+    public name: string;
+    public specialization: string;
+    public departments: any[];
+    public image: string | null;
     
     constructor() { 
         this.name = '',
         this.specialization = '',
-        this.departments = []
+        this.departments = [],
+        this.image = null
     }
 }

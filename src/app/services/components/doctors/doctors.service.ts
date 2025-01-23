@@ -23,6 +23,10 @@ export class DoctorsService {
     return this.http.get<any>(`${this.apiUrl}/doctors/${id}`)
   }
 
+  editDoctor(data: Doctor): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/doctors`, data);
+  }
+
   deleteDoctor(id: any): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/doctors/${id}`);
   }

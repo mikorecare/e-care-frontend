@@ -52,7 +52,13 @@ export class AppAddDoctorComponent implements OnInit {
   departmentData: any = []
   name: any
   selectedDepartmentId: string = '';
-  constructor(private http: DoctorsService, private router: Router, private departments: DepartmentsService, private dialog: MatDialog) {}
+  
+  constructor(
+    private http: DoctorsService, 
+    private router: Router, 
+    private readonly departments: DepartmentsService, 
+    private readonly dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.getDepartments();

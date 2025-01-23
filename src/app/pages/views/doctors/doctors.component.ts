@@ -71,9 +71,14 @@ export class AppDoctorsComponent implements OnInit {
     private department: DepartmentsService
   ) {}
 
-  editDoctor(element: any) {
-    this.dialog.open(AppEditDoctorComponent, {
-      height: '100vh',
+  editDoctor(id: string) {
+      const dialogResponse = this.dialog.open(AppEditDoctorComponent, {
+        height: '100vh',
+        data: {id}
+      });
+
+      dialogResponse.afterClosed().subscribe(result => {
+        this.getAll();
     });
   }
 
@@ -111,10 +116,8 @@ export class AppDoctorsComponent implements OnInit {
   
       if (department !== "all") {
         this.filteredDataSource = this.data.filter((obj: Doctor)=>{
-          const departmentsInvolved = obj.departments.map((data: { name: string; }) => data.name.toLocaleUpperCase());
+          const departmentsInvolved = obj.departments.map((data) => data.name.toLocaleUpperCase());
 
-          console.log(departmentsInvolved);
-          console.log(department)
           return departmentsInvolved.includes(department.toLocaleUpperCase()); 
         });
   

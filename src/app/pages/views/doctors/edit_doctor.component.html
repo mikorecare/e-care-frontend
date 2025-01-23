@@ -1,3 +1,4 @@
+<ng-container *ngIf="doctor">
 <mat-card>
   <mat-card-header>
     <img
@@ -14,50 +15,54 @@
     <form>
       <div class="profile-row">
         <mat-form-field class="profile-field">
-          <mat-label>Last Name</mat-label>
-          <input matInput value="Carter" />
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="doctor.name" name="name"/>
         </mat-form-field>
-        <mat-form-field class="profile-field">
+        <!-- <mat-form-field class="profile-field">
           <mat-label>First Name</mat-label>
           <input matInput value="Emily" />
         </mat-form-field>
         <mat-form-field class="profile-field">
           <mat-label>MI</mat-label>
           <input matInput value="A." />
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
-      <mat-form-field class="full-width">
+      <!-- <mat-form-field class="full-width">
         <mat-label>Home Address</mat-label>
         <textarea
           matInput
           value="Barangay Poblacion, Davao City, Davao del Sur"
         ></textarea>
-      </mat-form-field>
+      </mat-form-field> -->
       <div class="profile-row">
-        <mat-form-field class="profile-field">
+        <!-- <mat-form-field class="profile-field">
           <mat-label>Date of Birth</mat-label>
           <input matInput value="2001-10-22" type="date" />
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field class="profile-field">
-          <mat-label>Age</mat-label>
-          <input matInput value="29" type="number" />
+          <mat-label>Specialization</mat-label>
+          <input matInput [(ngModel)]="doctor.specialization" name="specialization"/>
         </mat-form-field>
       </div>
       <div class="profile-row">
-        <mat-form-field class="profile-field">
-          <mat-label>Department</mat-label>
-          <input matInput value="Ophthalmology" />
+        <mat-form-field appearance="outline" class="dropdown-field">
+          <mat-select [(ngModel)]="doctor.departments[0]" (selectionChange)="changeDepartment($event)" name="departments">
+            <ng-container *ngFor="let department of departments">
+              <mat-option [value]="department._id"> {{department.name}}</mat-option>
+            </ng-container>
+          </mat-select>
         </mat-form-field>
-        <mat-form-field class="profile-field">
+        <!-- <mat-form-field class="profile-field">
           <mat-label>Contact Number</mat-label>
           <input matInput value="+639496555410" />
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
     </form>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" style="white-space: nowrap">
+    <button (click)="onSubmit()" mat-raised-button color="primary" style="white-space: nowrap">
       Save Profile
     </button>
   </mat-card-actions>
 </mat-card>
+</ng-container>
