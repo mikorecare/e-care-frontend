@@ -1,0 +1,61 @@
+<div
+  class="blank-layout-container justify-content-center align-items-center bg-light"
+  style="
+    background: url('./assets/images/bg-apmc.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  "
+>
+  <div
+    class="position-relative row w-100 h-100 bg-gredient justify-content-center"
+    style="background: rgba(22, 66, 60, 0.698)"
+  >
+    <div class="col-lg-4 d-flex align-items-center">
+      <mat-card class="cardWithShadow boxed-auth">
+        <mat-card-content class="p-32">
+          <div class="text-center">
+            <a [routerLink]="['/dashboard']">
+              <img
+                src="./assets/images/logos/logo.jpg"
+                class="align-middle m-2"
+                alt="logo"
+                width="300"
+              />
+            </a>
+          </div>
+
+          <div class="text-center m-t-24">
+            <a [routerLink]="['/dashboard']">
+              <img
+                src="./assets/images/reset-password.png"
+                class="align-middle m-2"
+                alt="logo"
+                width="150"
+              />
+            </a>
+          </div>
+
+          <h3 class="text-center m-t-8" style="white-space: nowrap">
+            You are successfully Logged In!
+          </h3>
+          <p class="text-center">
+            Manage appointments, schedules, and bookings efficiently on your
+            dashboard.
+          </p>
+
+          <form class="m-t-30">
+            <a
+              [routerLink]="['/']"
+              mat-raised-button
+              color="primary"
+              class="w-100"
+            >
+              Go to Dashboard
+            </a>
+            <!-- input -->
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="doctor-modal">
+  <h2 class="modal-title">Add Doctor</h2>
+ <form (ngSubmit)="onSubmit()">
+  <div class="modal-content">
+    <!-- Profile Picture Section -->
+    <div class="profile-picture">
+      <label>Doctor Picture <span class="required">*</span></label>
+      <div class="upload-box">
+        <mat-icon>add_a_photo</mat-icon>
+        <span>Upload photo</span>
+      </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="form-fields">
+      <!-- <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input matInput />
+      </mat-form-field> -->
+      <mat-form-field>
+        <mat-label for="name">Name</mat-label>
+        <input matInput name="name" value="name" required [(ngModel)]="doctorData.name" #name="ngModel"/>
+      </mat-form-field>
+      <!-- <mat-form-field>
+        <mat-label>MI</mat-label>
+        <input matInput />
+      </mat-form-field> -->
+      <!-- <mat-form-field>
+        <mat-label>Home Address</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Date of Birth</mat-label>
+        <input matInput type="date" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Age</mat-label>
+        <input matInput type="number" />
+      </mat-form-field> -->
+      <mat-form-field>
+        <mat-label>Department</mat-label>
+        <mat-select [(value)]="selectedDepartmentId" required>
+          <mat-option *ngFor="let department of departmentData" [value]="department._id">
+            {{ department.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <input type="hidden" [value]="[selectedDepartmentId]" name="departments" />
+      
+      
+      <mat-form-field>
+        <mat-label>Specialty</mat-label>
+        <input matInput id="specialization" name="specialization" value="name" [(ngModel)]="doctorData.specialization" #specialization="ngModel" required />
+      </mat-form-field>
+      <!-- <mat-form-field>
+        <mat-label>Contact Number</mat-label>
+        <input matInput type="tel" />
+      </mat-form-field> -->
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <button type="button" class="btn btn-danger" color="warn" (click)="cancel()">Cancel</button>
+    <button type="submit" mat-raised-button color="primary">Add</button>
+  </div>
+ </form>
+
+  <!-- Action Buttons -->
+  
+</div>

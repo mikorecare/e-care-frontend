@@ -1,0 +1,189 @@
+<ng-container *ngIf="data">
+<mat-card>
+  <mat-card-header>
+    <img
+      src="https://teal-neat-coyote-213.mypinata.cloud/ipfs/bafkreib2podcyqy7awcw7jppqq3ld3jl2jhafmazayzc3ylypxx3ng5knu"
+      mat-card-avatar
+      class="user-avatar"
+      alt="User Avatar"
+      style="width: 6rem; height: 6rem"
+    />
+    <mat-card-title>
+      <ng-container *ngIf="data && data.firstname && data.lastname">
+        {{patientName}}
+      </ng-container>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <h3 class="section-title">Appointment Records</h3>
+
+    <!-- Current Status (colored via ngClass) -->
+    <div class="appointment-status" style="margin: 1rem 0rem">
+      <span
+        *ngIf="data && data.status"
+        [ngClass]="{
+          'status-completed': data.status === 'completed',
+          'status-upcoming': data.status === 'upcoming',
+          'status-cancelled': data.status === 'cancelled'
+        }"
+        class="rounded f-w-600 p-6 p-y-4 f-s-16"
+      >
+        {{ data.status }}
+      </span>
+    </div>
+
+    <form>
+      <!-- userId and department (ObjectIds) -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>User ID</mat-label>
+          
+          <input *ngIf="data && data.userId" matInput [value]="data.userId" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Department</mat-label>
+          <input matInput [value]="departmentName" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- newPatient + hospitalNo -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>New / Old Patient</mat-label>
+          <input matInput [value]="data?.newPatient" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem" *ngIf="data.newPatient === 'old'">
+          <mat-label>Hospital No.</mat-label>
+          <input matInput [value]="data.hospitalNo" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- Names / Contact -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Last Name</mat-label>
+          <input matInput [value]="data.lastname" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>First Name</mat-label>
+            <ng-container *ngIf="data && data.firstname">
+              <input matInput [value]="data.firstname" disabled />
+            </ng-container>
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Middle Name</mat-label>
+          <input matInput [value]="data.middlename" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- Age / Gender / PatientStatus -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Age</mat-label>
+          <input matInput [value]="data.age" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Gender</mat-label>
+          <input matInput [value]="data.gender" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Patient Status</mat-label>
+          <input matInput [value]="data.patientStatus" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- Address / MobileNumber -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Address</mat-label>
+          <input matInput [value]="data.address" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Contact Number</mat-label>
+          <input matInput [value]="data.mobileNumber" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- dateOfBirth / placeOfBirth / gurdian / Occupation -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [value]="data.dateOfBirth | date:'mediumDate'" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Place of Birth</mat-label>
+          <input matInput [value]="data.placeOfBirth" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Guardian</mat-label>
+          <input matInput [value]="data.gurdian" disabled />
+        </mat-form-field>
+
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Occupation</mat-label>
+          <input matInput [value]="data.Occupation" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- Description -->
+      <div class="form-row">
+        <mat-form-field class="field" style="width: 100%">
+          <mat-label>Description</mat-label>
+          <textarea matInput [value]="data.description" disabled></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- NotificationSent -->
+      <div class="form-row">
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Notification Sent</mat-label>
+          <input matInput [value]="data.notificationSent" disabled />
+        </mat-form-field>
+      </div>
+
+      <!-- Status (dropdown for editing) + Appointment Date (editable) -->
+      <div class="form-row">
+        <!-- Status -->
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="data.status" name="status">
+            <mat-option value="upcoming">Upcoming</mat-option>
+            <mat-option value="completed">Completed</mat-option>
+            <mat-option value="cancelled">Cancelled</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Date (editable) -->
+        <mat-form-field class="field" style="margin-right: 1rem">
+          <mat-label>Date Appointment</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="data.date"
+            name="scheduledDate"
+            disabled
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onSubmit()">
+      Save
+    </button>
+  </mat-card-actions>
+</mat-card>
+</ng-container>

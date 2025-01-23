@@ -1,0 +1,58 @@
+.department-modal {
+  // width: 500px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 24px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.modal-content {
+  display: grid;
+      grid-template-columns: 2fr 2fr;
+      gap: 2rem;
+}
+
+.profile-picture-container{
+  display: grid;
+  place-items: center;
+}
+
+.profile-picture {
+  width: 60%;
+  height: 60%;
+  text-align: center;
+  border: 1px dashed #ccc;
+  padding: 16px;
+  height: 10;
+  border-radius: 8px;
+}
+
+.upload-box {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  color: #888;
+}
+
+.form-fields {
+  // width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}

@@ -1,0 +1,95 @@
+<mat-card class="cardWithShadow overflow-hidden">
+  <mat-card-content>
+    <div class="header d-flex align-items-center justify-content-between p-y-4">
+      <mat-icon
+        style="margin-top: -1rem; margin-left: 1rem"
+        [matMenuTriggerFor]="filtermenu"
+        >filter_alt</mat-icon
+      >
+    </div>
+  </mat-card-content>
+
+  <mat-menu #filtermenu="matMenu" class="topbar-dd cardWithShadow">
+    <button mat-menu-item>By Rating</button>
+    <button mat-menu-item>By Department</button>
+  </mat-menu>
+
+  <mat-form-field appearance="outline" style="width: 100%" class="px-4">
+    <mat-icon matPrefix>search</mat-icon>
+    <mat-label>Search by name</mat-label>
+    <input matInput placeholder="Type to search" />
+  </mat-form-field>
+
+  <div class="table-responsive">
+    <table mat-table [dataSource]="data" class="mat-elevation-z8">
+      <!-- Check Column -->
+      <ng-container matColumnDef="check">
+        <th mat-header-cell *matHeaderCellDef>Select</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Hidden ID Column (if needed) -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef hidden>No.</th>
+        <td mat-cell *matCellDef="let element" hidden>{{ element._id }}</td>
+      </ng-container>
+
+      <!-- Patient Name Column (Renamed "patientName" to "userName") -->
+      <ng-container matColumnDef="patientName">
+        <th mat-header-cell *matHeaderCellDef>Patient Name</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip class="f-s-14">
+            {{ element.userName }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Department Column (department.name if populated) -->
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef>Department</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- If the server returns something like { _id:..., name: "Cardiology"} for department -->
+          {{ element.department?.name || element.department }}
+        </td>
+      </ng-container>
+
+      <!-- Rating Column (Dynamic star icons based on element.rate) -->
+      <ng-container matColumnDef="rate">
+        <th mat-header-cell *matHeaderCellDef>Rating</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- Loop from 1..5, color warn if star <= element.rate -->
+          <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+            <mat-icon [color]="star <= element.rate ? 'warn' : ''">star</mat-icon>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <!-- Message Column (from comments) -->
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef>Message</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.comments }}
+        </td>
+      </ng-container>
+
+      <!-- Date Column (use updatedAt or createdAt) -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.updatedAt | date: 'medium' }}
+        </td>
+      </ng-container>
+
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Data Rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <mat-paginator [pageSize]="6" [pageSizeOptions]="[6, 12, 24]"></mat-paginator>
+  </div>
+</mat-card>

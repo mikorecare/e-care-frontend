@@ -1,0 +1,71 @@
+mat-card {
+  margin: 1rem auto;
+  max-width: 50rem;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background-color: #f8fafc;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    .doctor-avatar {
+      border-radius: 50%;
+      border: 2px solid #ccc;
+    }
+
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #222222;
+    }
+
+    mat-card-subtitle {
+      font-size: 1rem;
+      color: #6b7280;
+    }
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: #374151;
+    border-bottom: 1px solid #ccc;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .form-row {
+      display: flex;
+      gap: 1.5rem;
+      .field {
+        flex: 1;
+        min-width: 10rem;
+      }
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* Status colors */
+.status-completed {
+  color: green;
+}
+
+.status-upcoming {
+  color: rgb(190, 190, 111);
+}
+
+.status-cancelled {
+  color: red;
+}

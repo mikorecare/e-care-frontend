@@ -1,0 +1,221 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.settings-container {
+    height: 100vh;
+    display: flex;
+  
+    .drawer-container {
+      height: 100%;
+      display: flex;
+    }
+  
+    /* Sidebar Styles */
+    .drawer {
+      width: 300px;
+      background-color: #f8f9fa;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      border-right: 1px solid #e0e0e0;
+  
+      .sidebar-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        .sidebar-item {
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          font-size: 16px;
+          color: #495057;
+          cursor: pointer;
+          transition: background-color 0.3s, color 0.3s, font-weight 0.3s;
+  
+          mat-icon {
+            margin-right: 15px;
+          }
+  
+          &.active {
+            background-color: #eaf2ff;
+            font-weight: bold;
+            color: #007bff;
+          }
+  
+          &:hover {
+            background-color: #f0f4ff;
+          }
+        }
+      }
+    }
+  
+    /* Main Content Styles */
+    .content-container {
+      padding: 30px;
+      width: 100%;
+      background-color: #ffffff;
+  
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #212529;
+      }
+  
+      .setting-card {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+  
+        .quota-display {
+          text-align: center;
+          margin-bottom: 20px;
+  
+          h1 {
+            font-size: 48px;
+            color: #007bff;
+            margin: 0;
+          }
+  
+          p {
+            font-size: 16px;
+            color: #495057;
+          }
+  
+          span {
+            font-size: 14px;
+            color: #868e96;
+          }
+        }
+  
+        .form-fields {
+          .full-width {
+            width: 100%;
+            margin-bottom: 20px;
+          }
+  
+          .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #495057;
+          }
+        }
+      }
+  
+      /* Profile Section */
+      .profile-container {
+        max-width: 600px;
+        margin: 0 auto;
+  
+        .profile-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+  
+          .profile-picture {
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-right: 15px;
+          }
+  
+          .profile-info {
+            h3 {
+              font-size: 20px;
+              font-weight: bold;
+              margin: 0;
+              color: #212529;
+            }
+  
+            span {
+              font-size: 14px;
+              color: #6c757d;
+            }
+          }
+        }
+  
+        .profile-form {
+          h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+          }
+  
+          .full-width {
+            width: 100%;
+            margin-bottom: 20px;
+          }
+  
+          .update-button {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+          }
+        }
+  
+        .password-section {
+          margin-top: 30px;
+  
+          h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+          }
+  
+          p {
+            font-size: 14px;
+            color: #6c757d;
+  
+            .link {
+              color: #007bff;
+              text-decoration: none;
+  
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  //Override Styles
+
+  .mat-mdc-raised-button.mat-primary {
+    background: #16423C !important;
+    border-radius: 0.3rem;
+    width: min-content;
+  }
+
+  .mdc-button--outlined.mat-warn{
+    border-radius: 0.3rem;
+  }
+
+  .sidebar-list.mdc-list .menu-list-item.activeMenu{
+    background: #16423C !important;
+    border-radius: 0.3rem;
+  }
+
+  
+  .sidebar-list.mdc-list .menu-list-item.activeMenu:hover{
+    color: white !important;
+  }
+
+  a.activeMenu span,  a.activeMenu .routeIcon {
+    color: white !important;
+  }
+
+  .sidebar-list.mdc-list .menu-list-item.activeMenu:hover  a.activeMenu .routeIcon{
+    color: white !important;
+  }
+  
+  
+  

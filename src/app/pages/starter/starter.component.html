@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-3">
+        <app-total-bookings
+          title="Total Bookings"
+          [value]="total?.count || 0"
+          icon="solar:cart-large-2-broken"
+        />
+      </div>
+      <div class="col-3">
+        <app-total-bookings
+          title="Completed Bookings"
+          [value]="complete?.count || 0"
+          icon="solar:check-circle-bold"
+          [style.background-color]="getBackgroundColor(complete?.count, 'completed')"
+        />
+      </div>
+      <div class="col-3">
+        <app-total-bookings
+          title="Cancelled Bookings"
+          [value]="cancelled?.count || 0"
+          icon="solar:close-circle-bold"
+        />
+      </div>
+      <div class="col-3">
+        <app-total-bookings
+          title="Pending Bookings"
+          [value]="upcoming?.count || 0"
+          icon="solar:clock-circle-bold"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <app-sales-profit></app-sales-profit>
+  </div>
+  <!-- <div class="col-lg-12">
+    <app-recent-bookings></app-recent-bookings>
+  </div> -->
+  <!-- <div class="pagination">
+    <mat-paginator
+      [pageSize]="6"
+      [pageSizeOptions]="[6, 12, 24]"
+    ></mat-paginator>
+  </div> -->
+  <!-- <div class="col-lg-8">
+    <app-popular-products></app-popular-products>
+  </div> -->
+  <!-- <div class="col-lg-4">
+    <app-earning-reports></app-earning-reports>
+  </div>
+  <div class="col-12">
+    <app-blog-card></app-blog-card>
+  </div> -->
+</div>

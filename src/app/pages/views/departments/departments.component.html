@@ -1,0 +1,84 @@
+<mat-card class="cardWithShadow overflow-hidden">
+  <mat-card-content>
+    <div class="header d-flex align-items-center justify-content-between">
+      <mat-form-field appearance="outline" style="width: 100%" class="px-4">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search</mat-label>
+        <input (input)="nameFilter($event)" matInput placeholder="Type to search" />
+      </mat-form-field>
+
+      <div class="d-flex align-items-center" style="margin-top: -1.5rem">
+        <!-- <button mat-icon-button color="warn">
+          <mat-icon>delete</mat-icon>
+        </button> -->
+        <button
+          mat-raised-button
+          color="primary"
+          style="white-space: nowrap"
+          (click)="createDepartment()"
+        >
+          + Add Item
+        </button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      @for(department of filteredData; track department._id) {
+      <div class="col-lg-4" (click)="editDepartment(department._id)">
+        <mat-card class="cardWithShadow position-relative overflow-hidden">
+          <div class="position-relative">
+            <!-- Image Section -->
+            <!-- Uncomment the image below if needed -->
+            <!-- <img
+              mat-card-image
+              [src]="'/' + department.image?.path"
+              alt="Photo of {{ department.name }}"
+              class="w-100"
+            /> -->
+    
+            <div
+              class="card-overlay h-100 d-flex align-items-end justify-content-end"
+            ></div>
+          </div>
+    
+          <mat-card-content class="p-y-24 m-y-32">
+            <div class="user-category">
+              <!-- Optional category badge -->
+              <!-- <span
+                class="f-s-13 m-y-16 f-w-600 p-x-8 bg-warning text-white rounded-pill"
+                >{{ department.category }}</span
+              > -->
+            </div>
+            <mat-card-title class="m-t-16 text-hover-primary cursor-pointer">
+              <span class="hover-text">{{ department.name }}</span>
+            </mat-card-title>
+            <mat-card-title class="m-t-16 text-hover-primary cursor-pointer">
+              <span class="hover-text">{{ department.dailyQuota }}</span>
+            </mat-card-title>
+            <div
+              class="d-flex align-items-center justify-content-center m-t-12"
+            >
+              <div class="d-flex align-items-center">
+                <span class="m-r-12 f-s-14 d-flex align-items-center">
+                  {{ department.description }}
+                </span>
+              </div>
+            </div>
+          </mat-card-content>
+    
+          <!-- Delete Button -->
+          <!-- <div class="d-flex justify-content-end p-2">
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="deleteDepartment(department._id)"
+            >
+              Delete
+            </button>
+          </div> -->
+        </mat-card>
+      </div>
+      }
+    </div>
+    
+  </mat-card-content>
+</mat-card>

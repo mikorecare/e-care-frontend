@@ -1,0 +1,71 @@
+<mat-toolbar class="topbar" style="margin: 2rem 0rem">
+  <!-- Mobile Menu -->
+  @if(!showToggle) {
+  <button
+    mat-mini-fab
+    color="inherit"
+    (click)="toggleMobileNav.emit()"
+    class="d-flex justify-content-center"
+  >
+    <i
+      class="iconify icon-20 d-flex"
+      data-icon="solar:hamburger-menu-line-duotone"
+    ></i>
+  </button>
+  }
+  <!-- --------------------------------------------------------------- -->
+  <!-- Notification Dropdown -->
+  <!-- --------------------------------------------------------------- -->
+
+  <div class="py-4" style="margin-left: 3rem"> 
+    <h1 class="fs-3">Hi, 
+      <ng-container *ngIf="data && data.firstname">
+      <span>{{data.firstname}}</span>
+    </ng-container></h1>
+    <p style="font-size: 0.8rem; color: gray">
+      Check in for work today!
+    </p>
+  </div>
+
+  <span class="flex-1-auto"></span>
+
+  <!-- --------------------------------------------------------------- -->
+  <!-- profile Dropdown -->
+  <!-- --------------------------------------------------------------- -->
+  <div class="d-flex">
+    <button
+      mat-fab
+      extended
+      color="inherit"
+      [matMenuTriggerFor]="profilemenu"
+      aria-label="Notifications"
+      class="d-flex justify-content-center profile-btn-dd"
+    >
+      <img
+        src="/assets/images/profile/user-1.jpg"
+        class="rounded-circle object-cover icon-35 profile-dd"
+        width="35"
+      />
+    </button>
+    <div style="line-height: 0.5rem" style="margin-right: 3rem">
+      <h1 style="font-size: 1rem">
+        <ng-container *ngIf="data && data.firstname">
+          <span>{{data.firstname}}</span>
+        </ng-container>
+      </h1>
+      <p style="font-size: 0.8rem; color: gray">Staff</p>
+    </div>
+  </div>
+
+  <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
+    <div class="p-x-12 m-t-12">
+      <a
+        [routerLink]="['/authentication/login']"
+        mat-stroked-button
+        color="primary"
+        class="w-100"
+        >Logout</a
+      >
+    </div>
+  </mat-menu>
+</mat-toolbar>

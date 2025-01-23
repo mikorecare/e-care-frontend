@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+  .hide-title {
+    display: none;
+  }
+}
+
+.green-background {
+  background-color: green;
+}
+
+app-total-bookings {
+  background-color: green !important;
+  color: white;
+}

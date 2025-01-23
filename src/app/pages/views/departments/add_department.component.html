@@ -1,0 +1,55 @@
+<div class="department-modal">
+  <h2 class="modal-title">Add Department</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="modal-content">
+      <!-- Profile Picture Section -->
+      <div class="profile-picture-container">
+        <div class="profile-picture">
+          <label>Department Picture <span class="required">*</span></label>
+          <div class="upload-box" matRipple>
+            <mat-icon>add_a_photo</mat-icon>
+            <span>Upload photo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Section -->
+      <div class="form-fields">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label for="name">Department Name</mat-label>
+          <input
+            matInput
+            id="name"
+            name="name"
+            [(ngModel)]="department.name"
+            #name="ngModel"
+            required
+          />
+        </mat-form-field>
+        <!-- <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Keyword</mat-label>
+        <input matInput required />
+      </mat-form-field> -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label for="description">Description</mat-label>
+          <textarea
+            matInput
+            rows="4"
+            id="description"
+            name="description"
+            [(ngModel)]="department.description"
+            #description="ngModel"
+            required
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="modal-actions">
+      <button mat-stroked-button color="warn" type="button" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn btn-primary" color="primary">Save</button>
+    </div>
+  </form>
+  
+</div>

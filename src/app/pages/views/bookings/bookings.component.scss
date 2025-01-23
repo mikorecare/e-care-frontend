@@ -1,0 +1,20 @@
+.status-completed {
+  text-transform: capitalize;
+  color: green;
+}
+
+.status-upcoming {
+  text-transform: capitalize;
+  color: rgb(190, 190, 111);
+}
+
+.status-cancelled {
+  text-transform: capitalize;
+  color: red;
+}
+
+.ng-deep::mat-select {
+  border-radius: 8px;
+}
+
+/* Additional styling can go here if needed */

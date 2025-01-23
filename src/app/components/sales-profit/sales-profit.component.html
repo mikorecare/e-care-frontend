@@ -1,0 +1,45 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="hstack align-items-center flex-column flex-lg-row m-b-20">
+      <mat-card-title>Appointment Total By Department</mat-card-title>
+
+      <!-- Month+Year Picker -->
+      <div class="m-l-auto">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Month & Year</mat-label>
+          <input
+            matInput
+            [matDatepicker]="monthPicker"
+            [(ngModel)]="selectedDate"
+            (dateChange)="onMonthYearChange($event.value)"
+          />
+          <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+
+          <mat-datepicker
+            #monthPicker
+            startView="multi-year"
+            panelClass="month-year-picker"
+            (monthSelected)="chosenMonthHandler($event, monthPicker)"
+          ></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <apx-chart
+      #chart
+      [series]="salesprofitChart.series"
+      [dataLabels]="salesprofitChart.dataLabels"
+      [chart]="salesprofitChart.chart"
+      [legend]="salesprofitChart.legend"
+      [colors]="salesprofitChart.colors"
+      [grid]="salesprofitChart.grid"
+      [fill]="salesprofitChart.fill"
+      [stroke]="salesprofitChart.stroke"
+      [tooltip]="salesprofitChart.tooltip"
+      [markers]="salesprofitChart.markers"
+      [xaxis]="salesprofitChart.xaxis"
+      [responsive]="salesprofitChart.responsive"
+      [yaxis]="salesprofitChart.yaxis"
+    ></apx-chart>
+  </mat-card-content>
+</mat-card>

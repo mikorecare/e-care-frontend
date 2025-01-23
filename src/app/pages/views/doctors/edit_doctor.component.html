@@ -1,0 +1,63 @@
+<mat-card>
+  <mat-card-header>
+    <img
+      src="https://cnmi.spmi.pt/wp-content/uploads/2014/10/speaker-3.jpg"
+      mat-card-avatar
+      class="doctor-avatar"
+      style="width: 6rem; height: 6rem"
+    />
+    <mat-card-title>Dr. Emily Carter</mat-card-title>
+    <mat-card-subtitle>Ophthalmologist</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="profile-section-title">Doctor Profile</div>
+    <form>
+      <div class="profile-row">
+        <mat-form-field class="profile-field">
+          <mat-label>Last Name</mat-label>
+          <input matInput value="Carter" />
+        </mat-form-field>
+        <mat-form-field class="profile-field">
+          <mat-label>First Name</mat-label>
+          <input matInput value="Emily" />
+        </mat-form-field>
+        <mat-form-field class="profile-field">
+          <mat-label>MI</mat-label>
+          <input matInput value="A." />
+        </mat-form-field>
+      </div>
+      <mat-form-field class="full-width">
+        <mat-label>Home Address</mat-label>
+        <textarea
+          matInput
+          value="Barangay Poblacion, Davao City, Davao del Sur"
+        ></textarea>
+      </mat-form-field>
+      <div class="profile-row">
+        <mat-form-field class="profile-field">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput value="2001-10-22" type="date" />
+        </mat-form-field>
+        <mat-form-field class="profile-field">
+          <mat-label>Age</mat-label>
+          <input matInput value="29" type="number" />
+        </mat-form-field>
+      </div>
+      <div class="profile-row">
+        <mat-form-field class="profile-field">
+          <mat-label>Department</mat-label>
+          <input matInput value="Ophthalmology" />
+        </mat-form-field>
+        <mat-form-field class="profile-field">
+          <mat-label>Contact Number</mat-label>
+          <input matInput value="+639496555410" />
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" style="white-space: nowrap">
+      Save Profile
+    </button>
+  </mat-card-actions>
+</mat-card>
