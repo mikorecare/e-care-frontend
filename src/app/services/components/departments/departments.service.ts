@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/app/pages/environtment';
+import { Department } from 'src/app/pages/views/departments/model/department';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class DepartmentsService {
 
   }
 
-  getAllDepartments(): Observable<any> { 
-    return this.http.get(`${this.apiUrl}/departments`)
+  getAllDepartments(): Observable<Department[]> { 
+    return this.http.get<Department[]>(`${this.apiUrl}/departments`)
   }
 
   createOrEditDepartment(data: any): Observable<any> {

@@ -1,4 +1,4 @@
-export class doctor {
+export class Doctor {
     name: any
     specialization: any
     departments: any

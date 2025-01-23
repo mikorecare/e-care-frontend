@@ -14,6 +14,9 @@ import { DoctorsService } from 'src/app/services/components/doctors/doctors.serv
 import Swal from 'sweetalert2';
 import { Department } from '../departments/model/department';
 import { DepartmentsService } from 'src/app/services/components/departments/departments.service';
+import { Doctor } from './models/doctor';
+import { Subscription } from 'rxjs';
+import { MatSelectChange } from '@angular/material/select';
 
 export interface doctorData {
   id: number;
@@ -25,69 +28,6 @@ export interface doctorData {
   status: string;
   statusClass: string;
 }
-
-const ELEMENT_DATA: doctorData[] = [
-  {
-    id: 1,
-    doctorName: 'Devon Lane',
-    profileImage: '../../../assets/images/profile/user-2.jpg',
-    specialty: 'Ophthalmologist',
-    department: 'Ophthalmology',
-    contact: '+63123456789',
-    status: 'Rescheduled',
-    statusClass: 'bg-light-warning text-warning',
-  },
-  {
-    id: 2,
-    doctorName: 'Kathryn Murphy',
-    profileImage: '../../../assets/images/profile/user-3.jpg',
-    specialty: 'Dentist',
-    department: 'Dental Clinic',
-    contact: '+63123456790',
-    status: 'Cancelled',
-    statusClass: 'bg-light-error text-error',
-  },
-  {
-    id: 3,
-    doctorName: 'Vilmalyn Cruz',
-    profileImage: '../../../assets/images/profile/user-1.jpg',
-    specialty: 'Obstetrician',
-    department: 'OB-GYNE',
-    contact: '+63123456791',
-    status: 'Pending',
-    statusClass: 'bg-light-primary text-info',
-  },
-  {
-    id: 4,
-    doctorName: 'Anita Johnson',
-    profileImage: '../../../assets/images/profile/user-4.jpg',
-    specialty: 'Orthopedic Surgeon',
-    department: 'Orthopedics',
-    contact: '+63123456792',
-    status: 'Completed',
-    statusClass: 'bg-light-success text-success',
-  },
-  {
-    id: 5,
-    doctorName: 'Guy Hawkins',
-    profileImage: '../../../assets/images/profile/user-5.jpg',
-    specialty: 'Pediatrician',
-    department: 'Pediatrics',
-    contact: '+63123456793',
-    status: 'Completed',
-    statusClass: 'bg-light-success text-success',
-  },
-  {
-    id: 6,
-    doctorName: 'Floyd Miles',
-    profileImage: '../../../assets/images/profile/user-7.jpg',
-    specialty: 'Hepatologist',
-    department: 'Hepatology',
-    contact: '+63123456794',
-    status: 'Cancelled',
-    statusClass: 'bg-light-error text-error',
-  },
-];
 
 @Component({
   selector: 'app-doctors',
@@ -114,7 +54,11 @@ export class AppDoctorsComponent implements OnInit {
     'status',
     'actions',
   ];
-  dataSource = ELEMENT_DATA;
+
+  public dataSource: Doctor[] = [];
+  public filteredDataSource: Doctor[] = [];
+  public departments: Department[] = [];
+
   selectedDoctor: any = null;
   departmentId: any
   departmentData: any
@@ -140,16 +84,51 @@ export class AppDoctorsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getAll();
+    this.getAllDepartments();
   }
 
   getAll(): void {
     this.http.getAll().subscribe((response) => {
       this.data = response;
-      console.log(this.data);
+      this.filteredDataSource = response;
+
+      console.log(response);
     });
   }
+
+  private getAllDepartments() {
+    const subscription: Subscription = this.department.getAllDepartments().subscribe((response) => {
+      this.departments = response;
+
+      subscription.unsubscribe();
+    });
+  }
+
+  public departmentFilterChange(event: MatSelectChange): void {
+      const department = (event.value).toLocaleUpperCase();
+  
+      if (department !== "all") {
+        this.filteredDataSource = this.data.filter((obj: Doctor)=>{
+          const departmentsInvolved = obj.departments.map((data: { name: string; }) => data.name.toLocaleUpperCase());
+
+          console.log(departmentsInvolved);
+          console.log(department)
+          return departmentsInvolved.includes(department.toLocaleUpperCase()); 
+        });
+  
+        return;
+      }
+  
+      if (department === "all") {
+        this.filteredDataSource = this.data;
+        
+        return;
+      }
+  
+      throw new Error("Option not implemented");
+    }
 
   getDepartmentById() {
     this.department.getDepartmenById(this.departmentId).subscribe((response) => {

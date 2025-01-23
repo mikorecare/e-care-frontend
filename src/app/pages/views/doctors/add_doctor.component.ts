@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DoctorsService } from 'src/app/services/components/doctors/doctors.service';
-import { doctor } from './models/doctor';
+import { Doctor } from './models/doctor';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -46,7 +46,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./add_doctor.component.scss'],
 })
 export class AppAddDoctorComponent implements OnInit {
-  doctorData: doctor = new doctor();
+  doctorData: Doctor = new Doctor();
   selectedFile: File | null = null;
   doctorId: any;
   departmentData: any = []

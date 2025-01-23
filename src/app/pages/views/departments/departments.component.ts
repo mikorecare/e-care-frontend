@@ -101,7 +101,7 @@ export class AppDepartmentsComponent implements OnInit {
       this.filteredData = response;
 
       this.cdr.detectChanges();
-    })
+    });
   }  
 
   deleteDepartment(id: any) {
