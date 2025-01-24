@@ -8,6 +8,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatDialog } from '@angular/material/dialog';
 import { FeedbackService } from 'src/app/services/components/feedback/feedback.service';
+import { Feedback } from './model/feedback.model';
+import { FormsModule } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-feedbacks',
@@ -17,6 +20,7 @@ import { FeedbackService } from 'src/app/services/components/feedback/feedback.s
     MatMenuModule,
     MatButtonModule,
     CommonModule,
+    FormsModule,
     TablerIconsModule,
     MatProgressBarModule,
     NgScrollbarModule,
@@ -34,15 +38,56 @@ export class AppFeedbacksComponent implements OnInit {
     'date',        // from updatedAt
   ];
 
-  data: any[] = []; // Will store the feedback data from the server
+  public dataSource: Feedback[] = [];
+  public filteredDataSource: Feedback[] = [];
+  public hidden: boolean = false;
+  public ratingArr: number[] = [1, 2, 3, 4, 5];
+  public selectedRating: string | number = "all";
 
-  constructor(private dialog: MatDialog, private feedback: FeedbackService) {}
+  constructor(private dialog: MatDialog, private feedback: FeedbackService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getAll();
   }
 
-  hidden = false;
+  public feedbackFilterChange(event: MatSelectChange): void {
+    const ratingValue: string | number = event.value;
+
+    console.log(ratingValue);
+    if (ratingValue !== "all") {
+      this.filteredDataSource = this.dataSource.filter((feedback: Feedback) => {
+        return feedback.rate === ratingValue;
+      });
+
+      return;
+    }
+
+    if (ratingValue === "all") {
+      this.revertDataSource();
+
+      return;
+    }
+
+    throw new Error("method not implemented");
+  }
+
+  public filterName(event: Event): void {
+    const searchString: string = (event.target as HTMLInputElement).value.toLocaleUpperCase();
+
+    if (searchString) {
+      this.filteredDataSource = this.dataSource.filter((feedback: Feedback) => {
+        return feedback.userName.toLocaleUpperCase().includes(searchString);
+      });
+    }
+
+    if (!searchString) {
+      this.revertDataSource();
+    }
+  }
+
+  private revertDataSource(): void {
+    this.filteredDataSource = this.dataSource;
+  }
 
   toggleBadgeVisibility() {
     this.hidden = !this.hidden;
@@ -52,11 +97,11 @@ export class AppFeedbacksComponent implements OnInit {
   getAll() {
     this.feedback.getAll().subscribe(
       async (response: any[]) => {
-        this.data = response;
-        console.log('Raw feedback data from server:', this.data);
+        this.dataSource = response;
+        console.log('Raw feedback data from server:', this.dataSource);
 
         // For each feedback, we replace userId with a userName
-        for (const item of this.data) {
+        for (const item of this.dataSource) {
           if (item.userId) {
             const user = await this.fetchUserById(item.userId);
             if (user?.firstname) {
@@ -70,7 +115,8 @@ export class AppFeedbacksComponent implements OnInit {
           }
         }
 
-        console.log('All data after userId replaced:', this.data);
+        this.filteredDataSource = this.dataSource;
+        console.log('All data after userId replaced:', this.dataSource);
       },
       (error) => {
         console.error('Error fetching feedback data:', error);
