@@ -58,6 +58,7 @@ export class AppDoctorsComponent implements OnInit {
   public dataSource: Doctor[] = [];
   public filteredDataSource: Doctor[] = [];
   public departments: Department[] = [];
+  public hidden: boolean = false;
 
   selectedDoctor: any = null;
   departmentId: any
@@ -69,23 +70,27 @@ export class AppDoctorsComponent implements OnInit {
     private http: DoctorsService,
     private cbr: ChangeDetectorRef,
     private department: DepartmentsService
-  ) {}
+  ) { }
 
   editDoctor(id: string) {
-      const dialogResponse = this.dialog.open(AppEditDoctorComponent, {
-        height: '100vh',
-        data: {id}
-      });
+    const dialogResponse = this.dialog.open(AppEditDoctorComponent, {
+      height: '100vh',
+      data: { id }
+    });
 
-      dialogResponse.afterClosed().subscribe(result => {
-        this.getAll();
+    dialogResponse.afterClosed().subscribe(result => {
+      this.getAll();
     });
   }
 
   createDoctor() {
-    this.dialog.open(AppAddDoctorComponent, {
+    const dialogResponse = this.dialog.open(AppAddDoctorComponent, {
       //  height: '95vh',
       width: '80vw',
+    });
+
+    dialogResponse.afterClosed().subscribe(result => {
+      this.getAll();
     });
   }
 
@@ -112,26 +117,26 @@ export class AppDoctorsComponent implements OnInit {
   }
 
   public departmentFilterChange(event: MatSelectChange): void {
-      const department = (event.value).toLocaleUpperCase();
-  
-      if (department !== "all") {
-        this.filteredDataSource = this.data.filter((obj: Doctor)=>{
-          const departmentsInvolved = obj.departments.map((data) => data.name.toLocaleUpperCase());
+    const department = (event.value).toLocaleUpperCase();
 
-          return departmentsInvolved.includes(department.toLocaleUpperCase()); 
-        });
-  
-        return;
-      }
-  
-      if (department === "all") {
-        this.filteredDataSource = this.data;
-        
-        return;
-      }
-  
-      throw new Error("Option not implemented");
+    if (department !== "all") {
+      this.filteredDataSource = this.data.filter((obj: Doctor) => {
+        const departmentsInvolved = obj.departments.map((data) => data.name.toLocaleUpperCase());
+
+        return departmentsInvolved.includes(department.toLocaleUpperCase());
+      });
+
+      return;
     }
+
+    if (department === "all") {
+      this.filteredDataSource = this.data;
+
+      return;
+    }
+
+    throw new Error("Option not implemented");
+  }
 
   getDepartmentById() {
     this.department.getDepartmenById(this.departmentId).subscribe((response) => {
@@ -139,8 +144,6 @@ export class AppDoctorsComponent implements OnInit {
       console.log(this.departmentData)
     })
   }
-
-  hidden = false;
 
   toggleBadgeVisibility() {
     this.hidden = !this.hidden;

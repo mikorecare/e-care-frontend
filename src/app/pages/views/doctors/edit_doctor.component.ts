@@ -57,15 +57,17 @@ export class AppEditDoctorComponent implements OnInit {
 
   private async fetchDoctorById(): Promise<void> {
     try {
-      const departmentResponse = await fetch(
+      const doctorResponse = await fetch(
         `http://localhost:4000/api/doctors/${this.data.id}`
       );
-      const departmentData: Doctor = await departmentResponse.json() as Doctor;
+      const doctorData: Doctor = await doctorResponse.json() as Doctor;
 
-      this.doctor = departmentData;
+      this.doctor = doctorData;
+
+      this.doctor.image //this is the mimeType
       this.fetchDepartmentById(this.doctor.departments[0]);
 
-      console.log(departmentData);
+      console.log(doctorData);
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching department:', error);
@@ -149,5 +151,9 @@ export class AppEditDoctorComponent implements OnInit {
           );
         }
       });
+    }
+
+    public cancel(): void {
+      this.dialog.closeAll();
     }
 }

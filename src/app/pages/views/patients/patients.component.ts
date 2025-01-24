@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AppEditPatientComponent } from './edit_patient.component';
 import { AppAddPatientComponent } from './add_patient.component';
 import { UsersService } from 'src/app/services/components/users/users.service';
+import { User } from './model/patients.model';
 
 export interface patientsData {
   id: number;
@@ -18,51 +19,6 @@ export interface patientsData {
   contact: string;
   address: string;
 }
-
-const ELEMENT_DATA: patientsData[] = [
-  {
-    id: 1,
-    patientName: 'Devon Lane',
-    profileImage: '../../../assets/images/profile/user-2.jpg',
-    contact: '+63123456789',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-  {
-    id: 2,
-    patientName: 'Kathryn Murphy',
-    profileImage: '../../../assets/images/profile/user-3.jpg',
-    contact: '+63123456790',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-  {
-    id: 3,
-    patientName: 'Vilmalyn Cruz',
-    profileImage: '../../../assets/images/profile/user-1.jpg',
-    contact: '+63123456791',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-  {
-    id: 4,
-    patientName: 'Anita Johnson',
-    profileImage: '../../../assets/images/profile/user-4.jpg',
-    contact: '+63123456792',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-  {
-    id: 5,
-    patientName: 'Guy Hawkins',
-    profileImage: '../../../assets/images/profile/user-5.jpg',
-    contact: '+63123456793',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-  {
-    id: 6,
-    patientName: 'Floyd Miles',
-    profileImage: '../../../assets/images/profile/user-7.jpg',
-    contact: '+63123456794',
-    address: 'Barangay Poblacion, Davao City, Davao del Sur',
-  },
-];
 
 @Component({
   selector: 'app-patients',
@@ -86,22 +42,38 @@ export class AppPatientsComponent implements OnInit {
     'address',
     'actions',
   ];
-  dataSource = ELEMENT_DATA;
-  data: any;
-  constructor(private dialog: MatDialog, private http: UsersService) {}
+  public dataSource: User[] = [];
+  public filteredDataSource: User[] = [];
+  public hidden: boolean = false;
+
+  constructor(private dialog: MatDialog, private http: UsersService) { }
 
   ngOnInit(): void {
     this.getAll();
   }
 
-  getAll() {
-    this.http.getAllUsers().subscribe((response) => {
-      this.data = response;
-      console.log(this.data);
-    })
+  public filterName(event: Event): void {
+    const searchString: string = (event.target as HTMLInputElement).value.toLocaleUpperCase();
+
+    if (searchString) {
+      this.filteredDataSource = this.dataSource.filter((user: User) => {
+        return user.firstname.toLocaleUpperCase().includes(searchString)
+          || user.lastname.toLocaleUpperCase().includes(searchString);
+      });
+    }
+
+    if (!searchString) {
+      this.filteredDataSource = this.dataSource;
+    }
   }
 
-  hidden = false;
+  public getAll(): void {
+    this.http.getAllUsers().subscribe((response) => {
+      this.dataSource = response;
+      this.filteredDataSource = response;
+      console.log(this.dataSource);
+    })
+  }
 
   toggleBadgeVisibility() {
     this.hidden = !this.hidden;
