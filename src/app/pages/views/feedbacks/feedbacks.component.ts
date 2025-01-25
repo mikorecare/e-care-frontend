@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,8 @@ import { FeedbackService } from 'src/app/services/components/feedback/feedback.s
 import { Feedback } from './model/feedback.model';
 import { FormsModule } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-feedbacks',
@@ -27,10 +29,13 @@ import { MatSelectChange } from '@angular/material/select';
   ],
   templateUrl: './feedbacks.component.html',
 })
-export class AppFeedbacksComponent implements OnInit {
+export class AppFeedbacksComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   // The table columns to show
   displayedColumns: string[] = [
     'id',          // hidden in HTML
+    'number',
     'patientName', // replaced userId with a userName
     'department',
     'rate',        // dynamic star rating
@@ -39,10 +44,11 @@ export class AppFeedbacksComponent implements OnInit {
   ];
 
   public dataSource: Feedback[] = [];
-  public filteredDataSource: Feedback[] = [];
   public hidden: boolean = false;
   public ratingArr: number[] = [1, 2, 3, 4, 5];
   public selectedRating: string | number = "all";
+
+  public filteredDataSource = new MatTableDataSource<Feedback>();
 
   constructor(private dialog: MatDialog, private feedback: FeedbackService) { }
 
@@ -50,15 +56,21 @@ export class AppFeedbacksComponent implements OnInit {
     this.getAll();
   }
 
+  public ngAfterViewInit(): void {
+    this.filteredDataSource.paginator = this.paginator;
+  }
+
   public feedbackFilterChange(event: MatSelectChange): void {
     const ratingValue: string | number = event.value;
 
     console.log(ratingValue);
     if (ratingValue !== "all") {
-      this.filteredDataSource = this.dataSource.filter((feedback: Feedback) => {
-        return feedback.rate === ratingValue;
-      });
+      this.filteredDataSource.filterPredicate = (data: Feedback) => {
 
+        return data.rate === ratingValue;
+      };
+
+      this.filteredDataSource.filter = ratingValue.toString();
       return;
     }
 
@@ -75,18 +87,20 @@ export class AppFeedbacksComponent implements OnInit {
     const searchString: string = (event.target as HTMLInputElement).value.toLocaleUpperCase();
 
     if (searchString) {
-      this.filteredDataSource = this.dataSource.filter((feedback: Feedback) => {
+      this.filteredDataSource.filterPredicate = ((feedback: Feedback) => {
         return feedback.userName.toLocaleUpperCase().includes(searchString);
       });
     }
 
+    this.filteredDataSource.filter = searchString;
+    
     if (!searchString) {
       this.revertDataSource();
     }
   }
 
   private revertDataSource(): void {
-    this.filteredDataSource = this.dataSource;
+    this.filteredDataSource.filter = "";
   }
 
   toggleBadgeVisibility() {
@@ -115,7 +129,7 @@ export class AppFeedbacksComponent implements OnInit {
           }
         }
 
-        this.filteredDataSource = this.dataSource;
+        this.filteredDataSource.data = this.dataSource;
         console.log('All data after userId replaced:', this.dataSource);
       },
       (error) => {

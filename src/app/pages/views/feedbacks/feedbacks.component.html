@@ -36,6 +36,13 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          {{ i + 1 }}
+        </td>
+      </ng-container>
+
       <!-- Hidden ID Column (if needed) -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef hidden>No.</th>

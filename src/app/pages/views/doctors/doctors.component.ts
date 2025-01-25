@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +17,8 @@ import { DepartmentsService } from 'src/app/services/components/departments/depa
 import { Doctor } from './models/doctor';
 import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 export interface doctorData {
   id: number;
@@ -44,8 +46,11 @@ export interface doctorData {
   ],
   templateUrl: './doctors.component.html',
 })
-export class AppDoctorsComponent implements OnInit {
+export class AppDoctorsComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) public paginator: MatPaginator;
+
   displayedColumns: string[] = [
+    'number',
     'id',
     'doctorName',
     'specialty',
@@ -56,7 +61,7 @@ export class AppDoctorsComponent implements OnInit {
   ];
 
   public dataSource: Doctor[] = [];
-  public filteredDataSource: Doctor[] = [];
+  public filteredDataSource: MatTableDataSource<Doctor> = new MatTableDataSource<Doctor>();
   public departments: Department[] = [];
   public hidden: boolean = false;
 
@@ -99,10 +104,14 @@ export class AppDoctorsComponent implements OnInit {
     this.getAllDepartments();
   }
 
+  public ngAfterViewInit(): void {
+      this.filteredDataSource.paginator = this.paginator;
+  }
+
   getAll(): void {
     this.http.getAll().subscribe((response) => {
       this.data = response;
-      this.filteredDataSource = response;
+      this.filteredDataSource.data = response;
 
       console.log(response);
     });
@@ -119,19 +128,22 @@ export class AppDoctorsComponent implements OnInit {
   public departmentFilterChange(event: MatSelectChange): void {
     const department = (event.value).toLocaleUpperCase();
 
-    if (department !== "all") {
-      this.filteredDataSource = this.data.filter((obj: Doctor) => {
+    if(department !== "ALL"){
+      this.filteredDataSource.filterPredicate = ((obj: Doctor) => {
         const departmentsInvolved = obj.departments.map((data) => data.name.toLocaleUpperCase());
 
         return departmentsInvolved.includes(department.toLocaleUpperCase());
       });
 
+      this.filteredDataSource.filter = department;
+
       return;
     }
 
-    if (department === "all") {
-      this.filteredDataSource = this.data;
+    if (department === "ALL") {
+      this.filteredDataSource.data = this.data;
 
+      this.filteredDataSource.filter = "";
       return;
     }
 
