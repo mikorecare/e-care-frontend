@@ -41,7 +41,7 @@ export class AppEditDepartmentComponent implements OnInit {
   async fetchDepartmentById(departmentId: string): Promise<void> {
     try {
       const departmentResponse = await fetch(
-        `http://localhost:4000/api/departments/${departmentId}`
+        `http://localhost:4000/api/admin/departments/${departmentId}`
       );
       const departmentData: Department = await departmentResponse.json();
       this.department = departmentData;

@@ -143,7 +143,7 @@ export class AppSalesProfitComponent implements OnInit, OnDestroy {
     }
 
     this.apiCall = this.http
-      .get<DepartmentCount[]>(`http://localhost:4000/api/appointments/departmentTotals?year=${year}&month=${month}`)
+      .get<DepartmentCount[]>(`http://localhost:4000/api/admin/appointments/departmentTotals?year=${year}&month=${month}`)
       .subscribe({
         next: (response) => {
           console.log('Received department totals for', year, month, ':', response);

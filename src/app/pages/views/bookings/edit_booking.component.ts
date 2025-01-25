@@ -96,7 +96,7 @@ export class AppEditBookingComponent implements OnInit {
 
   async fetchDepartmentById(departmentId: string): Promise<void> {
     try {
-      await fetch(`http://localhost:4000/api/departments/${departmentId}`)
+      await fetch(`http://localhost:4000/api/admin/departments/${departmentId}`)
         .then(async data => await data.json())
         .then(data => {
           console.log(data);
@@ -113,7 +113,7 @@ export class AppEditBookingComponent implements OnInit {
 
   async fetchUserById(userId: string): Promise<void> {
     try {
-      await fetch(`http://localhost:4000/api/users/${userId}`)
+      await fetch(`http://localhost:4000/api/admin/users/${userId}`)
         .then(async data => await data.json())
         .then(data => {
           console.log(data);

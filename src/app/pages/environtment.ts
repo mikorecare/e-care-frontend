@@ -5,7 +5,7 @@ export const environment = (() => {
       appVersion: 'v1.0.01',
       production: true,
       defaultUrl,
-      apiUrl: `${defaultUrl}/api`,
+      apiUrl: `${defaultUrl}/api/admin`,
     };
   })();
   

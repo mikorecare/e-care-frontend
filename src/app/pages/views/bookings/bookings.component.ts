@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,8 @@ import { AppEditBookingComponent } from './edit_booking.component';
 import { AppointmentsService } from 'src/app/services/components/appointments/appointments.service';
 import { DepartmentsService } from 'src/app/services/components/departments/departments.service';
 import { MatSelectChange } from '@angular/material/select';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-bookings',
@@ -28,18 +30,20 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./bookings.component.scss'],
 })
 export class AppBookingsComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   displayedColumns: string[] = [
+    'number',
     'patientName',
     'appointmentDate',
     'departmentName',
     'status',
-    'actions'
+    'actions',
   ];
-  
-  data: any[] = []; // Will store data from your backend
 
-  public departmentData: any[] = [];
-  public filteredDatasource: any[] = [];
+  data: any[] = [];
+  departmentData: any[] = [];
+  dataSource = new MatTableDataSource<any>();
 
   constructor(
     private dialog: MatDialog,
@@ -50,38 +54,35 @@ export class AppBookingsComponent implements OnInit {
   ngOnInit(): void {
     this.getAll();
     this.getAllDepartment();
-    
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
   private getAllDepartment() {
-    this.department.getAllDepartments().subscribe(
-      async (response) => {
-        this.departmentData = response;
-        this.departmentData.unshift({_id: "all", name: "All"});
-      }
-    )
+    this.department.getAllDepartments().subscribe((response) => {
+      this.departmentData = response;
+      this.departmentData.unshift({ _id: 'all', name: 'All' });
+    });
   }
 
-  // Fetch all appointment data from the backend
   getAll() {
     this.http.getAll().subscribe(
       async (response: any[]) => {
         this.data = response;
-        console.log(this.data);
-        // For each item, fetch the department name by ID
+
         for (const item of this.data) {
           if (item.department) {
             const deptInfo = await this.fetchDepartmentById(item.department);
             item.departmentName = deptInfo?.name || 'N/A';
           }
-
-          // Convert item.date (if in Mongo format) to JS Date
-          if (item.date && item.date.$date && item.date.$date.$numberLong) {
+          if (item.date?.$date?.$numberLong) {
             item.date = new Date(item.date.$date.$numberLong);
           }
         }
 
-        this.filteredDatasource = this.data;
+        this.dataSource.data = this.data;
       },
       (error) => {
         console.error('Error fetching data:', error);
@@ -102,103 +103,49 @@ export class AppBookingsComponent implements OnInit {
   }
 
   editBooking(element: any) {
-    // Open the edit dialog
     const dialogRef = this.dialog.open(AppEditBookingComponent, {
       height: '100vh',
       data: { id: element._id },
     });
 
-    // After the dialog closes, refresh data to see changes
     dialogRef.afterClosed().subscribe(() => {
       this.getAll();
     });
   }
 
-  public nameFilterChange(event: Event): void {
-    const nameText: string = (event.target as HTMLInputElement).value;
-
-    if(nameText) {
-      this.filteredDatasource = this.data.filter((obj)=>{
-        const nameConcat = obj.firstname.toLocaleUpperCase() + " "  + obj.lastname.toLocaleUpperCase();
-
-        return nameConcat.trim().toLocaleUpperCase().includes(nameText.toLocaleUpperCase());
-      });
-
-      return;
-    }
-
-    if(!nameText) {
-      this.filteredDatasource = this.data;
-
-      return;
-    }
-
-    throw new Error("Method not implemented");
+  nameFilterChange(event: Event): void {
+    const nameText: string = (event.target as HTMLInputElement).value.toLowerCase();
+    this.dataSource.filterPredicate = (data: any) => {
+      const fullName = `${data.firstname} ${data.lastname}`.toLowerCase();
+      return fullName.includes(nameText);
+    };
+    this.dataSource.filter = nameText;
   }
 
-  public statusFilterChange(event: MatSelectChange): void {
+  statusFilterChange(event: MatSelectChange): void {
     const status = event.value;
-
-    if (status !== "all") {
-      this.filteredDatasource = this.data.filter((obj)=>{
-        return obj.status.toLocaleUpperCase() === status.toLocaleUpperCase(); 
-      });
-
-      return;
-    }
-
-    if (status === "all") {
-      this.filteredDatasource = this.data;
-      
-      return;
-    }
-
-    throw new Error("Option not implemented");
+    this.dataSource.filterPredicate = (data: any) => {
+      return status === 'all' || data.status.toLowerCase() === status.toLowerCase();
+    };
+    this.dataSource.filter = status;
   }
 
-  public departmentFilterChange(event: MatSelectChange): void {
+  departmentFilterChange(event: MatSelectChange): void {
     const department = event.value;
-
-    if (department !== "all") {
-      this.filteredDatasource = this.data.filter((obj)=>{
-        return obj.department.toLocaleUpperCase() === department.toLocaleUpperCase(); 
-      });
-
-      return;
-    }
-
-    if (department === "all") {
-      this.filteredDatasource = this.data;
-      
-      return;
-    }
-
-    throw new Error("Option not implemented");
+    this.dataSource.filterPredicate = (data: any) => {
+      return department === 'all' || data.department === department;
+    };
+    this.dataSource.filter = department;
   }
 
-  public dateFilterChange(event: any): void {
+  dateFilterChange(event: any): void {
     const selectedDate = event.value;
-
-    if(selectedDate) {
-      const finalDate = new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric"
-      }).format(selectedDate);
-
-      this.filteredDatasource = this.data.filter((obj: any) => {
-        const tempDate = new Date(obj.date);
-
-        return new Intl.DateTimeFormat("en-US", {
-          month: "short",
-          day: "2-digit",
-          year: "numeric"
-        }).format(tempDate) === finalDate;
-      });
-    }
-
-    if(!selectedDate) {
-      this.filteredDatasource = this.data;
-    }
+    this.dataSource.filterPredicate = (data: any) => {
+      const appointmentDate = new Date(data.date);
+      return (
+        !selectedDate || appointmentDate.toDateString() === new Date(selectedDate).toDateString()
+      );
+    };
+    this.dataSource.filter = selectedDate || '';
   }
 }
