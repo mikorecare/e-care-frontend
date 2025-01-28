@@ -15,7 +15,7 @@ export class DoctorsService {
     return this.http.get<Doctor[]>(`${this.apiUrl}/doctors`)
   }
 
-  createOrEdit(data: Doctor): Observable<any> {
+  createOrEdit(data: FormData): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/doctors`, data);
   }
 

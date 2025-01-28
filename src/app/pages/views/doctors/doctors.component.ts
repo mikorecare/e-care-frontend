@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { Image } from '../patients/model/image.model';
 
 export interface doctorData {
   id: number;
@@ -77,7 +78,46 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
     private department: DepartmentsService
   ) { }
 
-  editDoctor(id: string) {
+  public ngOnInit(): void {
+    this.getAll();
+    this.getAllDepartments();
+  }
+
+  private getAllDepartments(): void {
+    const subscription: Subscription = this.department.getAllDepartments().subscribe((response) => {
+      this.departments = response;
+
+      subscription.unsubscribe();
+    });
+  }
+
+  private getAll(): void {
+    this.http.getAll().subscribe((response) => {
+      this.data = response;
+
+      this.data = this.data.map((doctor: Doctor) => {
+        if (doctor.image) {
+          const imageUrl = Image.createImageUrl(doctor.image);
+
+          return { ...doctor, image: imageUrl };
+        }
+
+        const defaultImageUrl = Image.createImageUrl(new Image(null, "", "", "", 0, new Date()));
+
+        return { ...doctor, image: defaultImageUrl };
+      });
+
+      this.filteredDataSource.data = this.data;
+
+      console.log(response);
+    });
+  }
+
+  public ngAfterViewInit(): void {
+    this.filteredDataSource.paginator = this.paginator;
+  }
+
+  public editDoctor(id: string) {
     const dialogResponse = this.dialog.open(AppEditDoctorComponent, {
       height: '100vh',
       data: { id }
@@ -88,7 +128,7 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  createDoctor() {
+  public createDoctor() {
     const dialogResponse = this.dialog.open(AppAddDoctorComponent, {
       //  height: '95vh',
       width: '80vw',
@@ -99,36 +139,10 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public ngOnInit(): void {
-    this.getAll();
-    this.getAllDepartments();
-  }
-
-  public ngAfterViewInit(): void {
-      this.filteredDataSource.paginator = this.paginator;
-  }
-
-  getAll(): void {
-    this.http.getAll().subscribe((response) => {
-      this.data = response;
-      this.filteredDataSource.data = response;
-
-      console.log(response);
-    });
-  }
-
-  private getAllDepartments() {
-    const subscription: Subscription = this.department.getAllDepartments().subscribe((response) => {
-      this.departments = response;
-
-      subscription.unsubscribe();
-    });
-  }
-
   public departmentFilterChange(event: MatSelectChange): void {
     const department = (event.value).toLocaleUpperCase();
 
-    if(department !== "ALL"){
+    if (department !== "ALL") {
       this.filteredDataSource.filterPredicate = ((obj: Doctor) => {
         const departmentsInvolved = obj.departments.map((data) => data.name.toLocaleUpperCase());
 
@@ -150,18 +164,18 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
     throw new Error("Option not implemented");
   }
 
-  getDepartmentById() {
+  private getDepartmentById() {
     this.department.getDepartmenById(this.departmentId).subscribe((response) => {
       this.departmentData = response;
       console.log(this.departmentData)
     })
   }
 
-  toggleBadgeVisibility() {
+  private toggleBadgeVisibility(): void {
     this.hidden = !this.hidden;
   }
 
-  deleteDoctor(id: any) {
+  public deleteDoctor(id: any): void {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",

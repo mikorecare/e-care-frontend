@@ -4,37 +4,59 @@
     <!-- Profile Picture Section -->
     <div class="profile-picture-container">
       <div class="profile-picture">
-        <label>Department Picture <span class="required">*</span></label>
         <ng-container *ngIf="department && department.image">
           <img [src]="imageUrl"/>
+          <mat-icon class="add-icon" (click)="fileInput.click()">add_a_photo</mat-icon>
         </ng-container>
-        <div class="upload-box" matRipple>
-          <mat-icon>add_a_photo</mat-icon>
-          <span>Upload photo</span>
-        </div>
+        <ng-container *ngIf="department && !department.image">
+          <label>Department Picture <span class="required">*</span></label>
+          <div class="upload-box" matRipple (click)="fileInput.click()">
+            <mat-icon>add_a_photo</mat-icon>
+            <span>Upload photo</span>
+          </div>
+        </ng-container>
+  
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          name="image"
+          style="display: none"
+        />
       </div>
     </div>
 
     <!-- Form Section -->
-        <ng-container *ngIf="department">
-          <div class="form-fields">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Department Name</mat-label>
-                <input  matInput [(ngModel)]="department.name" name="name" required />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Daily Quota</mat-label>
-                <input  matInput [(ngModel)]="department.dailyQuota" type="number" name="dailyQuota" required />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Description</mat-label>
-                <textarea  matInput rows="4" [(ngModel)]="department.description" name="description"  required></textarea>
-            </mat-form-field>
-          </div>
-        </ng-container>
-        
-    </div>
-   
+    <ng-container *ngIf="department">
+      <div class="form-fields">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Department Name</mat-label>
+          <input matInput [(ngModel)]="department.name" name="name" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Daily Quota</mat-label>
+          <input
+            matInput
+            [(ngModel)]="department.dailyQuota"
+            type="number"
+            name="dailyQuota"
+            required
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            rows="4"
+            [(ngModel)]="department.description"
+            name="description"
+            required
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
 
   <!-- Action Buttons -->
   <div class="modal-actions">

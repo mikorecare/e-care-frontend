@@ -5,13 +5,19 @@
       <!-- Profile Picture Section -->
       <div class="profile-picture-container">
         <div class="profile-picture">
-          <label>Department Picture <span class="required">*</span></label>
-          <div class="upload-box" matRipple>
-            <mat-icon>add_a_photo</mat-icon>
-            <span>Upload photo</span>
-          </div>
+          <img [src]="imageUrl"/>
+          <mat-icon (click)="fileInput.click()" class="add-icon">add_a_photo</mat-icon>
         </div>
       </div>
+
+      <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          name="image"
+          style="display: none"
+        />
 
       <!-- Form Section -->
       <div class="form-fields">
@@ -23,6 +29,17 @@
             name="name"
             [(ngModel)]="department.name"
             #name="ngModel"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Daily Quota</mat-label>
+          <input
+            matInput
+            [(ngModel)]="department.dailyQuota"
+            type="number"
+            name="dailyQuota"
             required
           />
         </mat-form-field>

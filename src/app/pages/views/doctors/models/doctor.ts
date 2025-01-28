@@ -4,7 +4,7 @@ export class Doctor {
     public name: string;
     public specialization: string;
     public departments: any[];
-    public image: string | null;
+    public image: any;
     
     constructor() { 
         this.name = '',

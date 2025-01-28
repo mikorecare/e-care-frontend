@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,8 @@ import { AppEditPatientComponent } from './edit_patient.component';
 import { AppAddPatientComponent } from './add_patient.component';
 import { UsersService } from 'src/app/services/components/users/users.service';
 import { User } from './model/patients.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 export interface patientsData {
   id: number;
@@ -34,8 +36,11 @@ export interface patientsData {
   ],
   templateUrl: './patients.component.html',
 })
-export class AppPatientsComponent implements OnInit {
+export class AppPatientsComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) public paginator: MatPaginator;
+
   displayedColumns: string[] = [
+    'number',
     'id',
     'patientName',
     'contact',
@@ -43,35 +48,40 @@ export class AppPatientsComponent implements OnInit {
     'actions',
   ];
   public dataSource: User[] = [];
-  public filteredDataSource: User[] = [];
+  public filteredDataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
   public hidden: boolean = false;
 
   constructor(private dialog: MatDialog, private http: UsersService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getAll();
+  }
+
+  public ngAfterViewInit(): void {
+      this.filteredDataSource.paginator = this.paginator;
   }
 
   public filterName(event: Event): void {
     const searchString: string = (event.target as HTMLInputElement).value.toLocaleUpperCase();
 
     if (searchString) {
-      this.filteredDataSource = this.dataSource.filter((user: User) => {
+      this.filteredDataSource.filterPredicate = ((user: User) => {
         return user.firstname.toLocaleUpperCase().includes(searchString)
           || user.lastname.toLocaleUpperCase().includes(searchString);
       });
+
+      this.filteredDataSource.filter = searchString;
     }
 
     if (!searchString) {
-      this.filteredDataSource = this.dataSource;
+      this.filteredDataSource.filter = "";
     }
   }
 
   public getAll(): void {
     this.http.getAllUsers().subscribe((response) => {
       this.dataSource = response;
-      this.filteredDataSource = response;
-      console.log(this.dataSource);
+      this.filteredDataSource.data = response;
     })
   }
 

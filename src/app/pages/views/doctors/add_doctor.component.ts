@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   MatCardHeader,
   MatCard,
@@ -44,6 +44,7 @@ import { MatDialog } from '@angular/material/dialog';
     CommonModule
   ],
   styleUrls: ['./add_doctor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppAddDoctorComponent implements OnInit {
   doctorData: Doctor = new Doctor();
@@ -53,15 +54,36 @@ export class AppAddDoctorComponent implements OnInit {
   name: any
   selectedDepartmentId: string = '';
   
+  public imageUrl: string = "";
+
   constructor(
     private http: DoctorsService, 
     private router: Router, 
     private readonly departments: DepartmentsService, 
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.getDepartments();
+  }
+
+  public onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input?.files?.length) {
+      const file = input.files[0];
+      console.log('Selected file:', file.name, file.type, file.size);
+
+      this.doctorData.image = file;
+      
+      this.imageUrl = URL.createObjectURL(file);
+      
+      this.cdr.detectChanges();
+
+    } else {
+      console.warn('No file selected');
+    }
   }
 
   hidden = false;
@@ -89,6 +111,14 @@ export class AppAddDoctorComponent implements OnInit {
   }
 
   onSubmit(): void {
+
+    const formData: FormData = new FormData();
+
+    formData.append("name", this.doctorData.name);
+    formData.append("specialization", this.doctorData.specialization);
+    formData.append("departments", JSON.stringify([this.selectedDepartmentId]));
+    formData.append("image", this.doctorData.image);
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Are you sure you want to add this doctor?',
@@ -99,8 +129,7 @@ export class AppAddDoctorComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.doctorData.departments = [this.selectedDepartmentId];
-        this.http.createOrEdit(this.doctorData).subscribe(
+        this.http.createOrEdit(formData).subscribe(
           () => {
             Swal.fire({
               icon: 'success',
@@ -111,6 +140,7 @@ export class AppAddDoctorComponent implements OnInit {
             });
           },
           (error) => {
+            console.log(error);
             Swal.fire({
               icon: 'error',
               title: 'Error',

@@ -3,13 +3,21 @@
  <form (ngSubmit)="onSubmit()">
   <div class="modal-content">
     <!-- Profile Picture Section -->
-    <div class="profile-picture">
-      <label>Doctor Picture <span class="required">*</span></label>
-      <div class="upload-box">
-        <mat-icon>add_a_photo</mat-icon>
-        <span>Upload photo</span>
+    <div class="profile-picture-container">
+      <div class="profile-picture">
+        <img [src]="imageUrl"/>
+        <mat-icon (click)="fileInput.click()" class="add-icon">add_a_photo</mat-icon>
       </div>
     </div>
+
+    <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        name="image"
+        style="display: none"
+      />
 
     <!-- Form Section -->
     <div class="form-fields">

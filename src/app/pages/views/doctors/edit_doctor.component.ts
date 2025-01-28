@@ -13,6 +13,7 @@ import { MatOption, MatSelect, MatSelectChange } from '@angular/material/select'
 import { DepartmentsService } from 'src/app/services/components/departments/departments.service';
 import Swal from 'sweetalert2';
 import { DoctorsService } from 'src/app/services/components/doctors/doctors.service';
+import { Image } from '../patients/model/image.model';
 
 
 
@@ -46,6 +47,7 @@ export class AppEditDoctorComponent implements OnInit {
   public doctor: Doctor = new Doctor();
   public department: Department = new Department();
   public departments: Department[] = [];
+  public imageUrl: string = "";
 
   constructor(
     private dialog: MatDialog,
@@ -67,7 +69,8 @@ export class AppEditDoctorComponent implements OnInit {
       this.doctor.image //this is the mimeType
       this.fetchDepartmentById(this.doctor.departments[0]);
 
-      console.log(doctorData);
+      this.imageUrl = Image.createImageUrl(this.doctor.image);
+      
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching department:', error);

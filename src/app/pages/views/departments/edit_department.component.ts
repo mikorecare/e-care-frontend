@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Department } from './model/department';
 import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '../../environtment';
 
 @Component({
   selector: 'app-edit_department',
@@ -34,6 +35,49 @@ export class AppEditDepartmentComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string }
   ) { }
 
+  public onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    
+    if (input?.files?.length) {
+      const file = input.files[0];
+      console.log('Selected file:', file.name, file.type, file.size);
+
+      this.department.image = file;
+
+      const formData = new FormData();
+      formData.append('name', this.department.name);
+      formData.append('description', this.department.description);
+      formData.append('dailyQuota', this.department.dailyQuota.toString());
+      formData.append('image', this.department.image);
+
+      this.http.editDepartment(formData, this.department._id).subscribe(
+        () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Update Photo Successful',
+            text: 'Department Photo Updated Successfully',
+          })
+          .then(()=>{
+            this.fetchDepartmentById(this.department._id);
+            
+            this.cdr.detectChanges();
+          })
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'There was an error updating the department photo',
+            confirmButtonText: 'OK',
+          });
+        }
+      );
+
+    } else {
+      console.warn('No file selected');
+    }
+  }
+
   async ngOnInit(): Promise<void> {
     await this.fetchDepartmentById(this.data.id)
   }
@@ -48,32 +92,19 @@ export class AppEditDepartmentComponent implements OnInit {
 
       console.log(this.department);
 
-      if (this.department.image) {
-        const mimeType =
-          this.department.image.mimeType || 'application/octet-stream';
-        const base64Flag = `data:${mimeType};base64,`;
-        const base64Image = this.arrayBufferToBase64(
-          this.department.image.data
-        );
-        this.imageUrl = base64Flag + base64Image;
+      if(!this.department.image) {
+        this.imageUrl = `${environment.defaultUrl}/uploads/default.jpg`;
       }
+
+      if(this.department.image) {
+        this.imageUrl = `${environment.defaultUrl}/uploads/${this.department.image.filename}`;
+      }
+      
 
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching department:', error);
     }
-  }
-
-  arrayBufferToBase64(buffer: ArrayBuffer): string {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-
-    return btoa(binary);
   }
 
   toggleBadgeVisibility() {
@@ -93,7 +124,7 @@ export class AppEditDepartmentComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         //this.doctorData.departments = [this.selectedDepartmentId];
-        this.http.editDepartment(this.department).subscribe(
+        this.http.editDepartment(this.department, this.department._id).subscribe(
           () => {
             Swal.fire({
               icon: 'success',

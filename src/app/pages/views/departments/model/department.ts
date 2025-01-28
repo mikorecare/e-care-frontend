@@ -11,6 +11,6 @@ export class Department {
         this.name = '',
         this.description = '',
         this.image = null,
-        this.dailyQuota = 0;
+        this.dailyQuota = 50;
     }
 }

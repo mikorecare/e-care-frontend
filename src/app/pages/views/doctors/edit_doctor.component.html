@@ -2,13 +2,13 @@
 <mat-card>
   <mat-card-header>
     <img
-      [src]="doctor.image"
+      [src]="imageUrl"
       mat-card-avatar
       class="doctor-avatar"
       style="width: 6rem; height: 6rem"
     />
-    <mat-card-title>Dr. Emily Carter</mat-card-title>
-    <mat-card-subtitle>Ophthalmologist</mat-card-subtitle>
+    <mat-card-title>{{ doctor.name }}</mat-card-title>
+    <mat-card-subtitle>{{ doctor.specialization }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <div class="profile-section-title">Doctor Profile</div>

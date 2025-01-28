@@ -13,6 +13,8 @@ import { AppAddDepartmentComponent } from './add_department.component';
 import { AppEditDepartmentComponent } from './edit_department.component';
 import { DepartmentsService } from 'src/app/services/components/departments/departments.service';
 import Swal from 'sweetalert2';
+import { Department } from './model/department';
+import { Image } from '../patients/model/image.model';
 
 export interface departmentData {
   id: number;
@@ -42,39 +44,42 @@ export interface departmentData {
 export class AppDepartmentsComponent implements OnInit {
   data: any[] = [];
   filteredData: any[] = [];
-  
+
   constructor(
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private department: DepartmentsService,
     private cdr: ChangeDetectorRef
-  )
-     { }
-  
+  ) { }
+
 
   ngOnInit(): void {
     this.getAll();
   }
 
   createDepartment() {
-    this.dialog.open(AppAddDepartmentComponent, {
+    const dialogResponse = this.dialog.open(AppAddDepartmentComponent, {
       //  height: '95vh',
       width: '80vw',
+    });
+
+    dialogResponse.afterClosed().subscribe(result => {
+      this.getAll();
     });
   }
 
   nameFilter(event: Event): void {
     const nameFilterValue: string = (<HTMLInputElement>event.target).value;
 
-    if(nameFilterValue) {
-      this.filteredData = this.data.filter((obj)=>{
-      
+    if (nameFilterValue) {
+      this.filteredData = this.data.filter((obj) => {
+
         return obj.name.trim().toLocaleUpperCase().includes(nameFilterValue.toLocaleUpperCase());
       });
 
-      return; 
+      return;
     }
 
-    if(!nameFilterValue) {
+    if (!nameFilterValue) {
       this.filteredData = this.data;
 
       return;
@@ -87,53 +92,65 @@ export class AppDepartmentsComponent implements OnInit {
     const dialogResponse = this.dialog.open(AppEditDepartmentComponent, {
       //  height: '95vh',
       width: '80vw',
-      data: {id}
+      data: { id }
     });
 
     dialogResponse.afterClosed().subscribe(result => {
-        this.getAll();
+      this.getAll();
     });
   }
 
   getAll() {
     this.department.getAllDepartments().subscribe((response) => {
       this.data = response;
-      this.filteredData = response;
+      this.data = this.data.map((item: Department) => {
+        if (item.image) {
+          const imageUrl = Image.createImageUrl(item.image);
+
+          return { ...item, image: imageUrl };
+        }
+
+        const defaultImageUrl = Image.createImageUrl(new Image(null, "", "", "", 0, new Date()));
+
+        return { ...item, image: defaultImageUrl };
+      })
+
+      this.filteredData = this.data;
 
       this.cdr.detectChanges();
     });
-  }  
+  }
 
   deleteDepartment(id: any) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.department.deleteDepartment(id).subscribe((response) => {
-            this.getAll();
-            Swal.fire(
-              'Deleted!',
-              'Your department has been deleted.',
-              'success'
-            )
-          }, error => {
-            console.error('Error deleting department', error)
-            Swal.fire(
-              'Error!',
-              'Failed to delete department',
-              'error'
-            );
-          })
-        }
-      })
-    }
-  
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.department.deleteDepartment(id).subscribe((response) => {
+          this.getAll();
+          Swal.fire(
+            'Deleted!',
+            'Your department has been deleted.',
+            'success'
+          )
+        }, error => {
+          console.error('Error deleting department', error)
+          Swal.fire(
+            'Error!',
+            'Failed to delete department',
+            'error'
+          );
+        })
+      }
+    })
+  }
+
 
   hidden = false;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   MatCardHeader,
   MatCard,
@@ -40,18 +40,43 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   styleUrls: ['./add_department.component.scss'],
-  
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class AppAddDepartmentComponent implements OnInit {
   department: Department = new Department();
-  data: any
-  constructor(private dialog: MatDialog, private http: DepartmentsService) { }
+  data: any;
+
+  public imageUrl: string = "";
+  constructor(
+    private dialog: MatDialog, 
+    private http: DepartmentsService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
 
   }
 
- 
+  public onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input?.files?.length) {
+      const file = input.files[0];
+      console.log('Selected file:', file.name, file.type, file.size);
+
+      this.department.image = file;
+      
+      this.imageUrl = URL.createObjectURL(file);
+      
+      this.cdr.detectChanges();
+
+    } else {
+      console.warn('No file selected');
+    }
+  }
+
+
 
   hidden = false;
 
@@ -64,37 +89,45 @@ export class AppAddDepartmentComponent implements OnInit {
   }
 
   onSubmit(): void {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Are you sure you want to add this doctor?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          //this.doctorData.departments = [this.selectedDepartmentId];
-          this.http.createOrEditDepartment(this.department).subscribe(
-            () => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Department Added',
-                text: 'Department Added Successfully',
-              }).then(() => {
-                this.dialog.closeAll();
-              });
-            },
-            (error) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'There was an error creating the department data',
-                confirmButtonText: 'OK',
-              });
-            }
-          );
-        }
-      });
-    }
+
+    const formData: FormData = new FormData();
+
+    formData.append("name", this.department.name);
+    formData.append("description", this.department.description);
+    formData.append("image", this.department.image);
+    formData.append("dailyQuota", this.department.dailyQuota.toString());
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Are you sure you want to add this doctor?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //this.doctorData.departments = [this.selectedDepartmentId];
+        this.http.createOrEditDepartment(formData).subscribe(
+          () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Department Added',
+              text: 'Department Added Successfully',
+            }).then(() => {
+              this.dialog.closeAll();
+            });
+          },
+          (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'There was an error creating the department data',
+              confirmButtonText: 'OK',
+            });
+          }
+        );
+      }
+    });
+  }
 }

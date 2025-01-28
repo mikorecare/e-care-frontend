@@ -22,8 +22,8 @@ export class DepartmentsService {
     return this.http.post(`${this.apiUrl}/departments`, data)
   }
 
-  editDepartment(data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/departments`, data);
+  editDepartment(data: any, id: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/departments/${id}`, data);
   }
 
   getDepartmenById(id: any): Observable<any> {
