@@ -146,7 +146,6 @@ export class AppSalesProfitComponent implements OnInit, OnDestroy {
       .get<DepartmentCount[]>(`http://localhost:4000/api/admin/appointments/departmentTotals?year=${year}&month=${month}`)
       .subscribe({
         next: (response) => {
-          console.log('Received department totals for', year, month, ':', response);
           if (this.salesprofitChart.series[0].data) {
             this.salesprofitChart.series[0].data = [];
           }

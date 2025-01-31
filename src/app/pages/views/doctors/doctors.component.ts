@@ -83,6 +83,10 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
     this.getAllDepartments();
   }
 
+  public ngAfterViewInit(): void {
+    this.filteredDataSource.paginator = this.paginator;
+  }
+
   private getAllDepartments(): void {
     const subscription: Subscription = this.department.getAllDepartments().subscribe((response) => {
       this.departments = response;
@@ -108,13 +112,11 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
       });
 
       this.filteredDataSource.data = this.data;
-
-      console.log(response);
     });
   }
 
-  public ngAfterViewInit(): void {
-    this.filteredDataSource.paginator = this.paginator;
+  public onImageError(event: Event): void {
+    Image.onImageError(event);
   }
 
   public editDoctor(id: string) {
@@ -167,7 +169,6 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
   private getDepartmentById() {
     this.department.getDepartmenById(this.departmentId).subscribe((response) => {
       this.departmentData = response;
-      console.log(this.departmentData)
     })
   }
 
@@ -192,8 +193,7 @@ export class AppDoctorsComponent implements OnInit, AfterViewInit {
             Swal.fire('Deleted!', 'Your doctor has been deleted.', 'success');
           },
           (error) => {
-            console.error('Error deleting doctor', error);
-            Swal.fire('Error!', 'Failed to delete doctor', 'error');
+            Swal.fire('Error!', 'Failed to delete doctor', error);
           }
         );
       }

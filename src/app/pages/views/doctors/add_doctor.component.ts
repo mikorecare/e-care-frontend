@@ -73,7 +73,6 @@ export class AppAddDoctorComponent implements OnInit {
 
     if (input?.files?.length) {
       const file = input.files[0];
-      console.log('Selected file:', file.name, file.type, file.size);
 
       this.doctorData.image = file;
       
@@ -102,7 +101,6 @@ export class AppAddDoctorComponent implements OnInit {
   getDepartments(): void {
     this.departments.getAllDepartments().subscribe((response) => {
       this.departmentData = response;
-      console.log(this.departmentData)
 
       if (this.departmentData.length > 0) {
         this.selectedDepartmentId = this.departmentData[0]._id;
@@ -140,7 +138,6 @@ export class AppAddDoctorComponent implements OnInit {
             });
           },
           (error) => {
-            console.log(error);
             Swal.fire({
               icon: 'error',
               title: 'Error',

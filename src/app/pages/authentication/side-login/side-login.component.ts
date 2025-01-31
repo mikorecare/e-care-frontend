@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { LoginService } from 'src/app/services/auth/login/login.service';
 import { login } from './model/login';
 import Swal from 'sweetalert2';
+import { GlobalService } from 'src/app/services/global.service';
+import { Admin, User } from '../../views/patients/model/patients.model';
 
 
 @Component({
@@ -29,7 +31,11 @@ import Swal from 'sweetalert2';
 export class AppSideLoginComponent {
   data: login
   loginData: any
-  constructor(private router: Router, private http: LoginService) {}
+  constructor(
+    private router: Router, 
+    private http: LoginService,
+     private global: GlobalService
+  ) {}
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required]),
@@ -48,7 +54,9 @@ export class AppSideLoginComponent {
       // Make the login HTTP request
       this.http.login(this.loginData).subscribe({
         next: (response) => {
-          console.log(response);
+
+          this.global.globalUser = new Admin(response.user);
+
           localStorage.setItem('userData', JSON.stringify(response));
           Swal.fire({
             title: 'Success!',

@@ -1,9 +1,10 @@
 <mat-card>
-  <h1>Edit Patient</h1>
+  <h1>View Patient</h1>
   <mat-card-header>
     <img
-      src="https://cnmi.spmi.pt/wp-content/uploads/2014/10/speaker-3.jpg"
+      [src]="imageUrl"
       mat-card-avatar
+      (error)="onImageError($event)"
       class="doctor-avatar"
       style="width: 6rem; height: 6rem"
     />
@@ -12,53 +13,113 @@
   </mat-card-header>
   <mat-card-content>
     <div class="profile-section-title">User Profile</div>
-    <form>
+    <div class="profile-container">
       <div class="profile-row">
-        <mat-form-field class="profile-field">
+        <div class="profile-field">
           <mat-label>Last Name</mat-label>
-          <input matInput value="Carter" />
-        </mat-form-field>
-        <mat-form-field class="profile-field">
+          <div class="mat-text">{{ user.lastname || "N/A" }}</div>
+        </div>
+        <div class="profile-field">
           <mat-label>First Name</mat-label>
-          <input matInput value="Emily" />
-        </mat-form-field>
-        <mat-form-field class="profile-field">
-          <mat-label>MI</mat-label>
-          <input matInput value="A." />
-        </mat-form-field>
+          <div class="mat-text">{{ user.firstname || "N/A" }}</div>
+        </div>
+        <div class="profile-field">
+          <mat-label>Middle Initial</mat-label>
+          <div class="mat-text">N/A</div>
+        </div>
       </div>
-      <mat-form-field class="full-width">
-        <mat-label>Home Address</mat-label>
-        <textarea
-          matInput
-          value="Barangay Poblacion, Davao City, Davao del Sur"
-        ></textarea>
-      </mat-form-field>
-      <div class="profile-row">
-        <mat-form-field class="profile-field">
-          <mat-label>Date of Birth</mat-label>
-          <input matInput value="2001-10-22" type="date" />
-        </mat-form-field>
-        <mat-form-field class="profile-field">
-          <mat-label>Age</mat-label>
-          <input matInput value="29" type="number" />
-        </mat-form-field>
+
+      <div class="full-width">
+        <mat-label>Email</mat-label>
+        <div class="mat-text">{{ user.email || "N/A" }}</div>
       </div>
+
       <div class="profile-row">
-        <mat-form-field class="profile-field">
-          <mat-label>Parents/Guardian</mat-label>
-          <input matInput value="Isabella M. Montefalco" />
-        </mat-form-field>
-        <mat-form-field class="profile-field">
+        <div class="profile-field">
           <mat-label>Contact Number</mat-label>
-          <input matInput value="+639496555410" />
-        </mat-form-field>
+          <div class="mat-text">{{ user.contactNumber || "N/A" }}</div>
+        </div>
+        <div class="profile-field">
+          <mat-label>Created At</mat-label>
+          <div class="mat-text">{{ user.createdAt | date : "medium" }}</div>
+        </div>
       </div>
-    </form>
+
+      <div class="profile-section-title">History</div>
+      <ng-container *ngIf="!user.patientsList">
+        <div class="profile-row">
+          <div class="mat-text">No appointments yet</div>
+        </div>
+      </ng-container>
+      <ng-container *ngFor="let patient of user.patientsList">
+        <div class="profile-row">
+          <div class="profile-container-card">
+
+            <div class="profile-row">
+              <div class="profile-field">
+                <mat-label>Date of Appointment</mat-label>
+                <div class="mat-text">{{ patient.date | date : "medium" }}</div>
+              </div>
+            </div>
+
+            <div class="profile-row">
+              <div class="profile-field">
+                <mat-label>Last Name</mat-label>
+                <div class="mat-text">{{ patient.lastname || "N/A" }}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>First Name</mat-label>
+                <div class="mat-text">{{ patient.firstname || "N/A" }}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>Middle Initial</mat-label>
+                <div class="mat-text">N/A</div>
+              </div>
+            </div>
+
+            <div class="profile-row">
+              <div class="profile-field">
+                <mat-label>Contact Number</mat-label>
+                <div class="mat-text">{{ patient.mobileNumber || "N/A" }}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>Created At</mat-label>
+                <div class="mat-text">{{ patient.createdAt | date : "medium" }}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>Civil Status</mat-label>
+                <div class="mat-text">{{ patient.patientStatus || "N/A" }}</div>
+              </div>
+            </div>
+
+            <div class="profile-row">
+              <div class="profile-field">
+                <mat-label>Date of Birth</mat-label>
+                <div class="mat-text">{{ patient.dateOfBirth || "N/A" }}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>Place of Birth</mat-label>
+                <div class="mat-text">{{ patient.placeOfBirth || "N/A"}}</div>
+              </div>
+              <div class="profile-field">
+                <mat-label>Guardian</mat-label>
+                <div class="mat-text">{{ patient.gurdian || "N/A" }}</div>
+              </div>
+            </div>
+     
+            <div class="full-width">
+              <mat-label>Description</mat-label>
+              <div class="mat-text">{{ patient.description || "N/A" }}</div>
+            </div>
+
+            <div class="full-width">
+              <mat-label>Status</mat-label>
+              <div class="mat-text">{{ patient.status || "N/A" }}</div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+     
+    </div>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button color="primary" style="white-space: nowrap">
-      Save Patient
-    </button>
-  </mat-card-actions>
 </mat-card>

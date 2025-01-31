@@ -59,28 +59,24 @@ export class StarterComponent implements OnInit{
   getAllTotalBooking() {
     this.appointment.getTotalBooking().subscribe((response) => {
       this.total = response;
-      console.log(this.total)
     })
   }
 
   getAllTotalComplete() {
     this.appointment.getTotalCompleted().subscribe((response) => {
       this.complete = response;
-      console.log(this.complete)
     })
   }
 
   getAllTotalUpcoming() {
     this.appointment.getTotalUpcoming().subscribe((response) => {
       this.upcoming = response;
-      console.log(this.upcoming);
     })
   }
 
   getAllCancelled() {
     this.appointment.getTotalCancelled().subscribe((response) => {
       this.cancelled = response;
-      console.log(this.cancelled);
     })
   }
 }

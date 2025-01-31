@@ -21,4 +21,12 @@ export class UsersService {
   getUserById(id: any): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/${id}`);
   }
+
+  public editUser(id: string, data: any): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users/profile/${id}`, data);
+  }
+
+  public changePassword(id: string, data: any): Observable<User>{
+    return this.http.put<User>(`${this.apiUrl}/users/change-password/${id}`, data);
+  }
 }

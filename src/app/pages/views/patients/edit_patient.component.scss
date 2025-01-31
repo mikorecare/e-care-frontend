@@ -4,6 +4,8 @@ mat-card {
   padding: 1rem 2rem;
   border-radius: 1rem;
   background-color: #f8fafc;
+  overflow-y: scroll;
+  max-height: 50rem;
 
   mat-card-header {
     display: flex;
@@ -36,10 +38,33 @@ mat-card {
     color: #374151;
   }
 
-  form {
+  .profile-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+
+    .profile-row {
+      display: flex;
+      gap: 1.5rem;
+
+      .profile-field {
+        flex: 1;
+        min-width: 10rem;
+      }
+    }
+
+    .full-width {
+      width: 100%;
+    }
+  }
+
+  .profile-container-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: solid 1px #374151;
+    border-radius: 8px;
+    padding: 8px;
 
     .profile-row {
       display: flex;
@@ -63,4 +88,8 @@ mat-card {
 
    
   }
+}
+
+.mat-text {
+  margin-top: 5px;
 }

@@ -60,6 +60,7 @@
               alt="Profile"
               width="60"
               height="60"
+              (error)="onImageError($event)"
             />
             {{ element.name }}
           </mat-chip>

@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import Swal from 'sweetalert2';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-feedbacks',
@@ -28,6 +30,15 @@ import { MatPaginator } from '@angular/material/paginator';
     NgScrollbarModule,
   ],
   templateUrl: './feedbacks.component.html',
+  styles: [
+    `
+      .delete-btn {
+        background-color: #fd2755ef;
+        color: white;
+        border-radius: 8px;
+      }
+    `
+  ]
 })
 export class AppFeedbacksComponent implements OnInit, AfterViewInit {
 
@@ -40,7 +51,8 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
     'department',
     'rate',        // dynamic star rating
     'message',     // from comments
-    'date',        // from updatedAt
+    'date',
+    'action'       // from updatedAt
   ];
 
   public dataSource: Feedback[] = [];
@@ -50,7 +62,7 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
 
   public filteredDataSource = new MatTableDataSource<Feedback>();
 
-  constructor(private dialog: MatDialog, private feedback: FeedbackService) { }
+  constructor(private dialog: MatDialog, private feedback: FeedbackService, private global: GlobalService) { }
 
   public ngOnInit(): void {
     this.getAll();
@@ -93,7 +105,7 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
     }
 
     this.filteredDataSource.filter = searchString;
-    
+
     if (!searchString) {
       this.revertDataSource();
     }
@@ -112,7 +124,6 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
     this.feedback.getAll().subscribe(
       async (response: any[]) => {
         this.dataSource = response;
-        console.log('Raw feedback data from server:', this.dataSource);
 
         // For each feedback, we replace userId with a userName
         for (const item of this.dataSource) {
@@ -130,7 +141,6 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
         }
 
         this.filteredDataSource.data = this.dataSource;
-        console.log('All data after userId replaced:', this.dataSource);
       },
       (error) => {
         console.error('Error fetching feedback data:', error);
@@ -150,6 +160,49 @@ export class AppFeedbacksComponent implements OnInit, AfterViewInit {
           resolve(null);
         }
       );
+    });
+  }
+
+  public deleteFeedback(id: string): void {
+    console.log(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.feedback.deleteFeedback(id, this.global.globalUser._id)
+          .subscribe(
+            data => {
+              if (data.message) {
+                Swal.fire({
+                  title: "Deleted!",
+                  text: data.message,
+                  icon: "success",
+                  confirmButtonColor: "#3085d6",
+                });
+              }
+
+              this.getAll();
+            },
+            (error: any) => {
+              console.log(error.error)
+              if (error.error) {
+                Swal.fire({
+                  title: "Error!",
+                  text: error.error,
+                  icon: "error",
+                  confirmButtonColor: "#d33",
+                });
+              }
+            }
+          );
+        Swal.fire("Deleted!", "Your feedback has been deleted.", "success");
+      }
     });
   }
 }

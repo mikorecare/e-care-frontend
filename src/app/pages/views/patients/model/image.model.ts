@@ -1,6 +1,9 @@
 import { environment } from "src/app/pages/environtment";
 
 export class Image {
+
+    private static defaultImageUrl: string = "assets/default.jpg";
+
     constructor(
         private readonly filename: string | null,
         private readonly originalName: string,
@@ -15,6 +18,11 @@ export class Image {
             return `${environment.defaultUrl}/uploads/${image.filename}`;
         }
 
-        return `${environment.defaultUrl}/uploads/default.jpg`;
+        return Image.defaultImageUrl;
     }
+
+    public static onImageError(event: Event): void {
+        const imgElement = event.target as HTMLImageElement;
+        imgElement.src = Image.defaultImageUrl;
+      }
 }

@@ -7,6 +7,7 @@ import { AppDepartmentsComponent } from './departments/departments.component'
 import {AppPatientsComponent} from './patients/patients.component'
 import { AppSettingsComponent } from './settings/settings.component';
 import { AppFeedbacksComponent } from './feedbacks/feedbacks.component';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 export const ViewsComponentsRoutes: Routes = [
   {

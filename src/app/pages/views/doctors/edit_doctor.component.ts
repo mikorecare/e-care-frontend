@@ -85,8 +85,6 @@ export class AppEditDoctorComponent implements OnInit {
       const departmentData: Department = await departmentResponse.json();
       this.department = departmentData;
 
-      console.log(this.department);
-
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error fetching department:', error);
@@ -110,8 +108,6 @@ export class AppEditDoctorComponent implements OnInit {
     const departmentId: string = event.value;
 
     this.doctor.departments[0] = departmentId;
-
-    console.log(this.doctor);
   }
 
   hidden = false;
@@ -121,7 +117,6 @@ export class AppEditDoctorComponent implements OnInit {
   }
 
   onSubmit(): void {
-      console.log(this.department);
       Swal.fire({
         title: 'Are you sure?',
         text: 'Are you sure you want to update this doctor?',

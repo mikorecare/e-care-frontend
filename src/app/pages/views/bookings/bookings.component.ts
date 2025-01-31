@@ -82,6 +82,7 @@ export class AppBookingsComponent implements OnInit {
           }
         }
 
+        console.log(this.data);
         this.dataSource.data = this.data;
       },
       (error) => {

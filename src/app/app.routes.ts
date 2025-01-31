@@ -1,21 +1,25 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: FullComponent,
+    // canActivate: [AuthGuard],
     children: [
       {
         path: '',
-        redirectTo: '/authentication/login',
+        redirectTo: 'dashboard',
         pathMatch: 'full',
       },
       {
         path: 'dashboard',
         loadChildren: () =>
           import('./pages/pages.routes').then((m) => m.PagesRoutes),
+        // canActivate: [AuthGuard],
+        // canLoad: [AuthGuard],
       },
       {
         path: 'views',
@@ -23,6 +27,8 @@ export const routes: Routes = [
           import('./pages/views/views-components.routes').then(
             (m) => m.ViewsComponentsRoutes
           ),
+        // canActivate: [AuthGuard],
+        // canLoad: [AuthGuard],
       },
       {
         path: 'ui-components',
@@ -30,11 +36,15 @@ export const routes: Routes = [
           import('./pages/ui-components/ui-components.routes').then(
             (m) => m.UiComponentsRoutes
           ),
+        // canActivate: [AuthGuard],
+        // canLoad: [AuthGuard],
       },
       {
         path: 'extra',
         loadChildren: () =>
           import('./pages/extra/extra.routes').then((m) => m.ExtraRoutes),
+        // canActivate: [AuthGuard],
+        // canLoad: [AuthGuard],
       },
     ],
   },

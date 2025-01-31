@@ -115,6 +115,7 @@ export class AppDepartmentsComponent implements OnInit {
         return { ...item, image: defaultImageUrl };
       })
 
+      console.log(this.data);
       this.filteredData = this.data;
 
       this.cdr.detectChanges();

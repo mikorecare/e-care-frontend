@@ -54,14 +54,15 @@
       <ng-container matColumnDef="patientName">
         <th mat-header-cell *matHeaderCellDef>Patient Name</th>
         <td mat-cell *matCellDef="let element">
-          <mat-chip class="f-s-14">
-            <!-- <img
+          <mat-chip class="f-s-14" (click)="editPatient(element._id)">
+            <img
               matChipAvatar
-              [src]="element.profileImage"
+              [src]="element.image"
               alt="Profile"
               width="40"
               height="40"
-            /> -->
+              (error)="onImageError($event)"
+            />
             {{ element.firstname }}&nbsp;{{ element.lastname}}
           </mat-chip>
         </td>

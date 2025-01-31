@@ -13,6 +13,7 @@ import { UsersService } from 'src/app/services/components/users/users.service';
 import { User } from './model/patients.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { Image } from './model/image.model';
 
 export interface patientsData {
   id: number;
@@ -51,14 +52,21 @@ export class AppPatientsComponent implements OnInit, AfterViewInit {
   public filteredDataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
   public hidden: boolean = false;
 
-  constructor(private dialog: MatDialog, private http: UsersService) { }
+  constructor(
+    private dialog: MatDialog, 
+    private http: UsersService,
+  ) { }
 
   public ngOnInit(): void {
     this.getAll();
   }
 
   public ngAfterViewInit(): void {
-      this.filteredDataSource.paginator = this.paginator;
+    this.filteredDataSource.paginator = this.paginator;
+  }
+
+  public onImageError(event: Event): void {
+    Image.onImageError(event);
   }
 
   public filterName(event: Event): void {
@@ -81,7 +89,20 @@ export class AppPatientsComponent implements OnInit, AfterViewInit {
   public getAll(): void {
     this.http.getAllUsers().subscribe((response) => {
       this.dataSource = response;
-      this.filteredDataSource.data = response;
+
+      this.dataSource = this.dataSource.map((item: User) => {
+        if (item.image) {
+          const imageUrl = Image.createImageUrl(item.image);
+
+          return { ...item, image: imageUrl };
+        }
+
+        const defaultImageUrl = Image.createImageUrl(new Image(null, "", "", "", 0, new Date()));
+
+        return { ...item, image: defaultImageUrl };
+      })
+
+      this.filteredDataSource.data = this.dataSource;
     })
   }
 
@@ -95,9 +116,15 @@ export class AppPatientsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  editPatient(element: any) {
-    this.dialog.open(AppEditPatientComponent, {
-      height: '100vh',
+  public editPatient(id: string): void {
+    const dialogResponse = this.dialog.open(AppEditPatientComponent, {
+       height: 'max-content',
+      width: 'max-content',
+      data: { id }
+    });
+
+    dialogResponse.afterClosed().subscribe(result => {
+      this.getAll();
     });
   }
 
